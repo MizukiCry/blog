@@ -1,0 +1,308 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>CMU10-414/714 Homework 0 | MizukiCry's Blog</title><meta name="robots" content="noindex"><meta name="author" content="MizukiCry"><meta name="copyright" content="MizukiCry"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="作业主要在 Google colab 上完成 Github repo 由于没有账号只能跑本地的测试了 Homework 0 基本都是抄公式复习，虽然我没学过 Question 1: A basic add function, and testing&amp;#x2F;autograding basics"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://blog.mizuki.fun/posts/de4d1ace.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":500},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: true,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'CMU10-414/714 Homework 0',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-08-01 21:19:48'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = url => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      link.onload = () => resolve()
+      link.onerror = () => reject()
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link href="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet" /></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raw.githubusercontent.com/MizukiCry/ImageHosting/master/img/202408012118558.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">31</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">19</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fas fa-message"></i><span> Talk</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://raw.githubusercontent.com/MizukiCry/ImageHosting/master/img/file_3250498.png')"><nav id="nav"><span id="blog-info"><a href="/" title="MizukiCry's Blog"><span class="site-name">MizukiCry's Blog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fas fa-message"></i><span> Talk</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">CMU10-414/714 Homework 0</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-05-01T06:14:27.000Z" title="发表于 2024-05-01 14:14:27">2024-05-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-08-01T13:19:48.613Z" title="更新于 2024-08-01 21:19:48">2024-08-01</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="CMU10-414/714 Homework 0"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>作业主要在 <a
+target="_blank" rel="noopener" href="https://colab.research.google.com/github/dlsyscourse/hw0/blob/master/hw0.ipynb">Google
+colab</a> 上完成</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/MizukiCry/CMU10-414-714">Github
+repo</a></p>
+<p>由于没有账号只能跑本地的测试了</p>
+<p>Homework 0 基本都是抄公式复习，虽然我没学过</p>
+<h3
+id="question-1-a-basic-add-function-and-testingautograding-basics">Question
+1: A basic add function, and testing/autograding basics</h3>
+<p>了解一下 Homework 的文件结构</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">x, y</span>):</span><br><span class="line">    <span class="keyword">return</span> x + y</span><br></pre></td></tr></table></figure>
+<h3 id="question-2-loading-mnist-data">Question 2: Loading MNIST
+data</h3>
+<p>实现一个加载数据集的函数</p>
+<p>查 API 是真累，<del>GPT yyds</del></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> gzip.<span class="built_in">open</span>(image_filename, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    magic, num, rows, cols = struct.unpack(<span class="string">&quot;&gt;IIII&quot;</span>, f.read(<span class="number">16</span>))</span><br><span class="line">    X = np.frombuffer(f.read(), dtype=np.uint8).reshape(num, rows*cols)</span><br><span class="line">X = X.astype(np.float32) / <span class="number">255.0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> gzip.<span class="built_in">open</span>(label_filename, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    magic, num = struct.unpack(<span class="string">&quot;&gt;II&quot;</span>, f.read(<span class="number">8</span>))</span><br><span class="line">    y = np.frombuffer(f.read(), dtype=np.uint8)</span><br><span class="line"><span class="keyword">return</span> X, y</span><br></pre></td></tr></table></figure>
+<h3 id="question-3-softmax-loss">Question 3: Softmax loss</h3>
+<p>实现 softmax loss 函数，抄公式就是了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> np.mean(np.log(np.<span class="built_in">sum</span>(np.exp(Z), axis=<span class="number">1</span>)) - Z[np.arange(Z.shape[<span class="number">0</span>]), y])</span><br></pre></td></tr></table></figure>
+<h3
+id="question-4-stochastic-gradient-descent-for-softmax-regression">Question
+4: Stochastic gradient descent for softmax regression</h3>
+<p>随机梯度下降</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(X.shape[<span class="number">0</span>] // batch):</span><br><span class="line">        x_d = X[i * batch : (i + <span class="number">1</span>) * batch]</span><br><span class="line">        y_d = y[i * batch : (i + <span class="number">1</span>) * batch]</span><br><span class="line">        o = np.exp(np.dot(x_d, theta))</span><br><span class="line">        z = o / o.<span class="built_in">sum</span>(axis = <span class="number">1</span>)[:, np.newaxis]</span><br><span class="line">        iy = np.eye(theta.shape[<span class="number">1</span>])[y_d]</span><br><span class="line">        theta -= lr / batch * np.dot(x_d.T, z - iy)</span><br></pre></td></tr></table></figure>
+<h3 id="question-5-sgd-for-a-two-layer-neural-network">Question 5: SGD
+for a two-layer neural network</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(X.shape[<span class="number">0</span>] // batch):</span><br><span class="line">        x_d = X[i * batch: (i + <span class="number">1</span>) * batch]</span><br><span class="line">        y_d = y[i * batch: (i + <span class="number">1</span>) * batch]</span><br><span class="line">        x_w1 = np.dot(x_d, W1)</span><br><span class="line">        o = np.exp(np.dot(np.maximum(<span class="number">0</span>, x_w1), W2))</span><br><span class="line">        s = o / o.<span class="built_in">sum</span>(axis=<span class="number">1</span>)[:, np.newaxis]</span><br><span class="line">        iy = np.eye(W2.shape[<span class="number">1</span>])[y_d]</span><br><span class="line">        d_w1 = np.dot(x_d.T, np.multiply(</span><br><span class="line">            np.dot(s - iy, W2.T), np.where(x_w1 &lt;= <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>)))</span><br><span class="line">        d_w2 = np.dot(np.maximum(<span class="number">0</span>, x_w1).T, s-iy)</span><br><span class="line">        W1 -= lr / batch * d_w1</span><br><span class="line">        W2 -= lr / batch * d_w2</span><br></pre></td></tr></table></figure>
+<h3 id="question-6-softmax-regression-in-c">Question 6: Softmax
+regression in C++</h3>
+<p>实现 C++ 版本的 softmax regression</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; m; i += batch) &#123;</span><br><span class="line">    <span class="type">const</span> <span class="type">float</span> *x_d = X + i * n;</span><br><span class="line">    <span class="type">const</span> <span class="type">unsigned</span> <span class="type">char</span> *y_d = y + i;</span><br><span class="line"></span><br><span class="line">    <span class="type">float</span> *t = <span class="keyword">new</span> <span class="type">float</span>[batch * k];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">size_t</span> x = <span class="number">0</span>; x &lt; batch; x++) &#123;</span><br><span class="line">      <span class="type">float</span> sum = <span class="number">0</span>;</span><br><span class="line">      <span class="keyword">for</span> (<span class="type">size_t</span> y = <span class="number">0</span>; y &lt; k; y++) &#123;</span><br><span class="line">        t[x * k + y] = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">size_t</span> z = <span class="number">0</span>; z &lt; n; z++) &#123;</span><br><span class="line">          t[x * k + y] += x_d[x * n + z] * theta[z * k + y];</span><br><span class="line">        &#125;</span><br><span class="line">        t[x * k + y] = std::<span class="built_in">exp</span>(t[x * k + y]);</span><br><span class="line">        sum += t[x * k + y];</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">for</span> (<span class="type">size_t</span> y = <span class="number">0</span>; y &lt; k; y++) &#123;</span><br><span class="line">        t[x * k + y] /= sum;</span><br><span class="line">      &#125;</span><br><span class="line">      t[x * k + y_d[x]] -= <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">size_t</span> x = <span class="number">0</span>; x &lt; n; x++) &#123;</span><br><span class="line">      <span class="keyword">for</span> (<span class="type">size_t</span> y = <span class="number">0</span>; y &lt; k; y++) &#123;</span><br><span class="line">        <span class="type">float</span> sum = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">size_t</span> z = <span class="number">0</span>; z &lt; batch; z++) &#123;</span><br><span class="line">          sum += x_d[z * n + x] * t[z * k + y];</span><br><span class="line">        &#125;</span><br><span class="line">        theta[x * k + y] -= lr / batch * sum;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<!-- flag of hidden posts --></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://blog.mizuki.fun">MizukiCry</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://blog.mizuki.fun/posts/de4d1ace.html">https://blog.mizuki.fun/posts/de4d1ace.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.mizuki.fun" target="_blank">MizukiCry's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/C/">C++</a><a class="post-meta__tags" href="/tags/Python/">Python</a><a class="post-meta__tags" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><a class="post-meta__tags" href="/tags/dlsys/">dlsys</a></div><div class="post_share"><div class="social-share" data-image="https://raw.githubusercontent.com/MizukiCry/ImageHosting/master/img/file_3250498.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#question-1-a-basic-add-function-and-testingautograding-basics"><span class="toc-number">1.</span> <span class="toc-text">Question
+1: A basic add function, and testing&#x2F;autograding basics</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#question-2-loading-mnist-data"><span class="toc-number">2.</span> <span class="toc-text">Question 2: Loading MNIST
+data</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#question-3-softmax-loss"><span class="toc-number">3.</span> <span class="toc-text">Question 3: Softmax loss</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#question-4-stochastic-gradient-descent-for-softmax-regression"><span class="toc-number">4.</span> <span class="toc-text">Question
+4: Stochastic gradient descent for softmax regression</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#question-5-sgd-for-a-two-layer-neural-network"><span class="toc-number">5.</span> <span class="toc-text">Question 5: SGD
+for a two-layer neural network</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#question-6-softmax-regression-in-c"><span class="toc-number">6.</span> <span class="toc-text">Question 6: Softmax
+regression in C++</span></a></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2024 By MizukiCry</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>function loadGiscus () {
+  let nowTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+
+  const config = Object.assign({
+    src: 'https://giscus.app/client.js',
+    'data-repo': 'MizukiCry/blog',
+    'data-repo-id': 'R_kgDOID_XNw',
+    'data-category-id': 'DIC_kwDOID_XN84CUEiJ',
+    'data-mapping': 'pathname',
+    'data-theme': nowTheme,
+    'data-reactions-enabled': '1',
+    crossorigin: 'anonymous',
+    async: true
+  },null)
+
+  let ele = document.createElement('script')
+  for (let key in config) {
+    ele.setAttribute(key, config[key])
+  }
+  document.getElementById('giscus-wrap').insertAdjacentElement('afterbegin',ele)
+}
+
+function changeGiscusTheme () {
+  const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+
+  function sendMessage(message) {
+    const iframe = document.querySelector('iframe.giscus-frame');
+    if (!iframe) return;
+    iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+  }
+
+  sendMessage({
+    setConfig: {
+      theme: theme
+    }
+  });
+}
+
+if ('Giscus' === 'Giscus' || !false) {
+  if (false) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+  else loadGiscus()
+} else {
+  function loadOtherComment () {
+    loadGiscus()
+  }
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

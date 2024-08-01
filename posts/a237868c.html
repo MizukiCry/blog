@@ -1,0 +1,680 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Stanford CS149 PARALLEL COMPUTING Notes (Fall 2023) / CMU15-418 | MizukiCry's Blog</title><meta name="author" content="MizukiCry"><meta name="copyright" content="MizukiCry"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Stanford CS149 Parallel Computing: 斯坦福一门并行计算的课，最近不知道该做些什么，感觉要是继续颓下去就废了。打算学一学这门课，在这里记一下看 Slides 做的笔记 课程主页：Fall 2023 网上似乎没有 CS149 的视频，这门课前身是 CMU 的"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://blog.mizuki.fun/posts/a237868c.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":500},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: true,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Stanford CS149 PARALLEL COMPUTING Notes (Fall 2023) / CMU15-418',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-04-25 11:39:29'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = url => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      link.onload = () => resolve()
+      link.onerror = () => reject()
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link href="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet" /></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raw.githubusercontent.com/MizukiCry/ImageHosting/master/img/202408012118558.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">31</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">19</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fas fa-message"></i><span> Talk</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://raw.githubusercontent.com/MizukiCry/ImageHosting/master/img/file_3250485.png')"><nav id="nav"><span id="blog-info"><a href="/" title="MizukiCry's Blog"><span class="site-name">MizukiCry's Blog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fas fa-message"></i><span> Talk</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Stanford CS149 PARALLEL COMPUTING Notes (Fall 2023) / CMU15-418</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-03-25T14:32:55.000Z" title="发表于 2024-03-25 22:32:55">2024-03-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-04-25T03:39:29.612Z" title="更新于 2024-04-25 11:39:29">2024-04-25</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Stanford CS149 PARALLEL COMPUTING Notes (Fall 2023) / CMU15-418"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>Stanford CS149 Parallel Computing:
+斯坦福一门并行计算的课，最近不知道该做些什么，感觉要是继续颓下去就废了。打算学一学这门课，在这里记一下看
+Slides 做的笔记</p>
+<p>课程主页：<a target="_blank" rel="noopener" href="https://gfxcourses.stanford.edu/cs149/fall23">Fall
+2023</a></p>
+<p>网上似乎没有 CS149 的视频，这门课前身是 CMU 的
+15-418，可以看这门课的<a
+target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Xz4y1p7ZN">视频</a></p>
+<h3 id="lecture-1-why-parallelism-why-efficiency">Lecture 1: Why
+Parallelism? Why Efficiency?</h3>
+<blockquote>
+<p>2024/3/25</p>
+</blockquote>
+<p>目标：并行处理加速程序计算</p>
+<p>优化：减少线程之间通信 /
+同步，线程过多将严重影响性能，平均分配任务</p>
+<p>Fast != Efficient，考虑硬件消耗性价比</p>
+<p>利用硬件中针对专门指令的处理单元</p>
+<p>指令级并行 ILP</p>
+<p>内存定义：一段连续的地址空间，通过地址定位其中的每一个字节，访问内存通常使得
+CPU 等待影响性能</p>
+<p>超标量
+CPU：每个核心有多个逻辑单元（ALU），可以一个周期同时执行多条指令（若指令间相互独立）</p>
+<p>Cache：将部分内存缓存到 CPU
+自带的高速缓存中，若缓存命中则不需要访问内存，通常已 Cache Line
+为单位进行缓存。当访问连续内存或多次访问同一内存时，Cache 命中率高</p>
+<p>CPU 有多级缓存，每个 Processor 有单独的 L1, L2 Cache，多个 Processor
+共享 L3 Cache</p>
+<p>Cache 大致速率：L1 (4 cycles) &lt; L2 (12 cycles) &lt; L3 (40 cycles)
+&lt; DRAM (250 cycles)</p>
+<h3 id="lecture-2-a-modern-multi-core-processor">Lecture 2: A Modern
+Multi-Core Processor</h3>
+<blockquote>
+<p>2024/3/26</p>
+</blockquote>
+<p>一个例子：给一个数组 <span class="math inline">\(x[i]\)</span>
+和简单函数 <span class="math inline">\(f(x)\)</span>，计算 <span
+class="math inline">\(y[i] = f(x[i])\)</span></p>
+<ol type="1">
+<li>将数组分成 <span class="math inline">\(N\)</span>
+个部分，每个部分分配给一个线程</li>
+<li>如果函数 <span class="math inline">\(f(x)\)</span>
+中的指令完全相同，只是传入的数据不同，可以利用 SIMD
+指令集，将读取到的一条指令传给多个
+ALU，在单个核心上同时计算多个数据，例如使用 AVX 指令集同时计算 8 个 32
+位数据（SIMD 和循环展开是不一样的）</li>
+</ol>
+<p>但如果代码中有分支，SIMD 就会失效，一次只能执行部分指令，所以 SIMD
+要求程序一致性</p>
+<p>到此有三种并行：Superscalar（硬件实现，多个取解码器、ALU）,
+SIMD（编译器、硬件实现）, Multi-Core</p>
+<p>Cache LRU 替换策略，Cache 预读</p>
+<p>提高单核吞吐量（Interleaved
+multi-threading）：当一个线程等待时切换到另一个线程执行。代价：上下文切换，适当的线程数量可以提高
+CPU 利用率，但线程过多会导致频繁上下文切换</p>
+<p>同步多线程（Simultaneous multi-threading ,
+SMT）：每一个周期处理器选择多个线程的指令同时执行，如 Intel
+的超线程技术</p>
+<h3
+id="lecture-3-multi-core-arch-part-ii-ispc-programming-abstractions">Lecture
+3: Multi-core Arch Part II + ISPC Programming Abstractions</h3>
+<p>延迟（完成一整个任务的费时）、带宽、吞吐量（平均任务处理能力）的区别</p>
+<p>在大量读取内存的情况下内存带宽成为瓶颈</p>
+<p>流水线：将一个任务分成多个阶段，在前一个任务完成一个阶段后同时开始下一个任务的这个阶段，提高吞吐量。通常一个周期完成一条指令指的就是流水线下的吞吐量而非延迟</p>
+<p>Intel SPMD Program Compiler (ISPC): 一个 C
+语言变体的编译器，此语言针对 SPMD (Single Program Multiple Data)
+进行扩展（利用 SIMD 指令）。通过使用 ISPC 可以自动利用 SIMD 指令集</p>
+<blockquote>
+<p>2024/3/27</p>
+</blockquote>
+<p>表层 Abstraction 与底层 Implementation</p>
+<p>调用 ISPC 函数时生成多个程序实例，每个实例同时计算。ISPC
+一些关键字：<code>programCount</code>
+实例数量，<code>programIndex</code> 当前实例编号，<code>uniform</code>
+一致变量（编译器自动优化，所有实例使用同一份变量），<code>foreach</code>
+循环</p>
+<p>使用泰勒展开计算 <span class="math inline">\(n\)</span> 个 <span
+class="math inline">\(\sin(x)\)</span>：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">export <span class="type">void</span> <span class="title function_">ispc_sinx</span><span class="params">(</span></span><br><span class="line"><span class="params">  uniform <span class="type">int</span> N,</span></span><br><span class="line"><span class="params">  uniform <span class="type">int</span> terms,</span></span><br><span class="line"><span class="params">  uniform <span class="type">float</span>* x,</span></span><br><span class="line"><span class="params">  uniform <span class="type">float</span>* result)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment">// assumes N % programCount = 0</span></span><br><span class="line">  <span class="keyword">for</span> (uniform <span class="type">int</span> i = <span class="number">0</span>; i &lt; N; i += programCount) &#123;</span><br><span class="line">    <span class="type">int</span> idx = i + programIndex;</span><br><span class="line">    <span class="type">float</span> value = x[idx];</span><br><span class="line">    <span class="type">float</span> numer = x[idx] * x[idx] * x[idx];</span><br><span class="line">    uniform <span class="type">int</span> denom = <span class="number">6</span>; <span class="comment">// 3!</span></span><br><span class="line">    uniform <span class="type">int</span> sign = <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">for</span> (uniform <span class="type">int</span> j = <span class="number">1</span>; j &lt;= terms; j++) &#123;</span><br><span class="line">      value += sign * numer / denom</span><br><span class="line">      numer *= x[idx] * x[idx];</span><br><span class="line">      denom *= (<span class="number">2</span>*j+<span class="number">2</span>) * (<span class="number">2</span>*j+<span class="number">3</span>);</span><br><span class="line">      sign *= <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    result[idx] = value;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>分组求和（不能直接 <code>float sum</code> 或者
+<code>uniform float sum</code>）：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">export uniform <span class="type">float</span> <span class="title function_">sum_array</span><span class="params">(</span></span><br><span class="line"><span class="params">  uniform <span class="type">int</span> N,</span></span><br><span class="line"><span class="params">  uniform <span class="type">float</span>* x)</span></span><br><span class="line">&#123;</span><br><span class="line">  uniform <span class="type">float</span> sum;</span><br><span class="line">  <span class="type">float</span> partial = <span class="number">0.0f</span>;</span><br><span class="line">  foreach (i = <span class="number">0</span> ... N) &#123;</span><br><span class="line">    partial += x[i];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// reduce_add() is part of ISPC’s cross</span></span><br><span class="line">  <span class="comment">// program instance standard library</span></span><br><span class="line">  sum = reduce_add(partial);</span><br><span class="line">  <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="lecture-4-parallel-programming-basics">Lecture 4: Parallel
+Programming Basics</h3>
+<p>编写并行程序的基本步骤：Decomposition, Assignment, Orchestration,
+Mapping</p>
+<p>加速效果 <span class="math inline">\(\textup{Speedup} =
+\frac{Time(Sequential)}{Time(Parallel)}\)</span></p>
+<p>程序中无法并行部分占比 <span class="math inline">\(S\)</span>，则
+<span class="math inline">\(\textup{Speedup} \le
+\frac{1}{S}\)</span>，<span class="math inline">\(P\)</span> 个核心下
+<span class="math inline">\(\textup{Speedup}\le \frac{1}{S + \frac{1 -
+S}{P}}\)</span></p>
+<p>通常分解任务由程序员完成，分配任务由编译器完成</p>
+<p>一个例子：使用 G-S 迭代法解
+PDE（<del>死去的线性代数与数值分析正在攻击我</del>）。部分代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (...) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt;= n; j++) &#123;</span><br><span class="line">      prev = A[i, j];</span><br><span class="line">      A[i, j] = <span class="number">0.2</span> * (A[i, j] + A[i, j<span class="number">-1</span>] + A[i<span class="number">-1</span>, j] + A[i, j+<span class="number">1</span>] + A[i+<span class="number">1</span>, j]);</span><br><span class="line">      diff += <span class="built_in">fabs</span>(A[i, j] - prev);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种情况下每一次迭代中 <code>A[i, j]</code> 依赖于
+<code>A[i - 1, j]</code> 和
+<code>A[i, j - 1]</code>。一种方法是按从左上往右下的顺序，这样虽然可以并行加速但比较麻烦，效果可能不明显。一种优化是使用
+Red-Black
+Ordering，将矩阵交叉染色分成红黑两部分，分别计算。这种情况下根据局部性原理将连续的数据分配给一个线程，可以减少跨线程内存访问</p>
+<p>老生常谈：多线程共享内存的同步问题、原子操作、Lock、Barrier</p>
+<p>上述迭代算法中一个 Barrier 分析的例子：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (!done) &#123;</span><br><span class="line">  <span class="type">float</span> myDiff = <span class="number">0.f</span>;</span><br><span class="line">  diff = <span class="number">0.f</span>;</span><br><span class="line">  barrier(myBarrier, NUM_PROCESSORS);</span><br><span class="line">  <span class="keyword">for</span> (cells) &#123;</span><br><span class="line">    <span class="type">float</span> prev = A[i,j];</span><br><span class="line">    A[i,j] = ...;</span><br><span class="line">    myDiff += <span class="built_in">abs</span>(A[i,j] - prev);</span><br><span class="line">  &#125;</span><br><span class="line">  lock(myLock);</span><br><span class="line">  diff += myDiff;</span><br><span class="line">  unlock(myLock);</span><br><span class="line">  barrier(myBarrier, NUM_PROCESSORS);</span><br><span class="line">  <span class="keyword">if</span> (diff/(n*n) &lt; TOLERANCE) done = <span class="literal">true</span>;</span><br><span class="line">  barrier(myBarrier, NUM_PROCESSORS);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为什么有三个 Barrier？第一个：防止计算全局变量 <code>diff</code>
+时有某个 Instance 调用开头的 <code>diff = 0</code>，第三个 Barrier
+同理，第二个 Barrier 则是希望所有 Instance
+得到相同结果，不会在计算完成时有某个 Instance 继续迭代</p>
+<p>优化：上述 Barrier 基本都是由于 <code>diff</code>
+变量，通过在每次迭代中使用不同的 <code>diff</code> 变量可以减少至一个
+Barrier</p>
+<p>（课件中是一个 <code>diff[3]</code>，但我感觉两个 <code>diff</code>
+就够用了？暂时不是很清楚，视频中也没详细讲）</p>
+<hr />
+<p>完成了 <a href="https://blog.mizuki.fun/posts/f3442c29.html">CS149
+Programming Assignment 1</a></p>
+<hr />
+<h3
+id="lecture-5-performance-optimization-i-work-distribution-and-scheduling">Lecture
+5: Performance Optimization I: Work Distribution and Scheduling</h3>
+<blockquote>
+<p>2024/3/30</p>
+</blockquote>
+<p>任务分配的不同方式：</p>
+<ul>
+<li>Static Assignment: 任务计算成本已知，效率最高</li>
+<li>Semi-Static Assignment:
+任务计算成本不完全已知，但可以动态估计，运行时进行少量调整</li>
+<li>Dynamic Assignment:
+任务计算成本不可预测，运行时随时动态调整，分割出的任务数量越多越容易平均分配，但也会增加额外开销</li>
+</ul>
+<p>如何将任务平均分配给线程？</p>
+<ul>
+<li>将大型任务分割成小任务：额外开销，且可能无法分割</li>
+<li>先分配大型任务：需要运行时间可计算</li>
+</ul>
+<p>动态分配：Task Queue</p>
+<p>可以每个核独享一个任务队列减少核之间的竞争，当任务队列为空时可以从其他核的队列中获取任务</p>
+<p>任务间有依赖：需要完成前置任务才能取出队列中的任务</p>
+<p>Cilk Plus: C++ 的扩展语言，<code>cilk_spawn</code> +
+<code>cilk_sync</code> 实现任务并行（Fork-Join
+范式）。底层实现：线程池，控制同时运行的线程数量，每个线程有自己的任务队列，队列为空时去其他线程队列获取任务</p>
+<p><code>cilk_spawn</code> 的两种实现（Cilk Plus
+为后者）：生成线程后继续执行当前任务（Continuation
+First）、生成线程后挂起当前任务并切换到新线程执行（Child First）</p>
+<p>线程间任务偷取的实现：任务队列为双端队列（Lock-Free
+Deque），线程自己生成 / 获取任务时从队头插入 /
+取出，从其他线程偷取任务时从队尾取出</p>
+<p>从其他线程偷取任务时可以一次偷取大量任务减少次数，在 Child First
+的情况下双端队列可以保证线程间的局部性</p>
+<p><code>cilk_sync</code>
+的实现：若没有线程间任务的偷取则无需特殊操作。否则将
+<code>cilk_sync</code>
+对应的任务添加同一个标识符，维护标识符对应的生成任务数量与完成任务数量，当两者相等即所有任务完成</p>
+<h3
+id="lecture-6-performance-optimization-ii-locality-communication-and-contention">Lecture
+6: Performance Optimization II: Locality, Communication, and
+Contention</h3>
+<p>CPU 内部结构：每个核心一个 L1, L2 Cache，多个核心共享 L3 Cache。</p>
+<p>NUMA 非一致性内存访问架构：内存被划分为 NUMA
+节点，不同核心访问不同节点的延迟和带宽都可能不同</p>
+<p>Message Passing
+Model：每个线程独享自己的内存空间，只能通过消息传递进行通信</p>
+<p>以 G-S 迭代解 PDE 为例，每个数的计算依赖于周围 4
+个数，因此中间部分矩阵对应的线程需要从其它线程额外获取上下两行（Ghost
+rows）。最后每个计算线程需要把结果同步给主线程：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (tid != <span class="number">0</span>)</span><br><span class="line">  <span class="built_in">send</span>(&amp;localA[<span class="number">1</span>, <span class="number">0</span>], <span class="built_in">sizeof</span>(<span class="type">float</span>) * (N + <span class="number">2</span>), tid - <span class="number">1</span>, MSG_ID_ROW);</span><br><span class="line"><span class="keyword">if</span> (tid != <span class="built_in">get_num_threads</span>() - <span class="number">1</span>)</span><br><span class="line">  <span class="built_in">send</span>(&amp;localA[rows_per_thread, <span class="number">0</span>], <span class="built_in">sizeof</span>(<span class="type">float</span>) * (N + <span class="number">2</span>), tid + <span class="number">1</span>, MSG_ID_ROW);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (tid != <span class="number">0</span>)</span><br><span class="line">  <span class="built_in">recv</span>(&amp;localA[<span class="number">0</span>, <span class="number">0</span>], <span class="built_in">sizeof</span>(<span class="type">float</span>) * (N + <span class="number">2</span>), tid - <span class="number">1</span>, MSG_ID_ROW);</span><br><span class="line"><span class="keyword">if</span> (tid != <span class="built_in">get_num_threads</span>() - <span class="number">1</span>)</span><br><span class="line">  <span class="built_in">recv</span>(&amp;localA[rows_per_thread + <span class="number">1</span>, <span class="number">0</span>], <span class="built_in">sizeof</span>(<span class="type">float</span>) * (N + <span class="number">2</span>), tid + <span class="number">1</span>, MSG_ID_ROW);</span><br></pre></td></tr></table></figure>
+<p>但如果使用 Synchronous (blocking) send / recv（send
+会阻塞线程直到收到对方的 ack，recv
+会阻塞线程直到接收完毕），上述代码就有可能死锁，需要修改消息传递的顺序避免死锁。同时也有异步版本的
+Non-blocking asynchronous send / recv</p>
+<p>通信无处不在：CPU - L1 - L2（或者其它核的 L2）- L3 -
+Memory（或者其它电脑的内存）- 硬盘 - 网络 ......，局部性原理</p>
+<blockquote>
+<p>2024/3/31</p>
+</blockquote>
+<p>运算强度 Arithmetic intensity = 运算量 / 通信量</p>
+<p>Inherent communication 必要通信（算法原理所必须的通信，如 Ghost
+rows）/ Artifactual communication 人为通信（具体实现细节中的通信，如
+Cache miss）</p>
+<p>减少必要通信：已 G-S 迭代为例，<span class="math inline">\(N\times
+N\)</span> 的网格，<span class="math inline">\(P\)</span>
+个处理器，若横向分成 <span class="math inline">\(P\)</span>
+块，则运算强度为 <span
+class="math inline">\(O(\frac{N}{P})\)</span>；若横竖分为 <span
+class="math inline">\(\sqrt{P}\times \sqrt{P}\)</span> 块，则运算强度为
+<span class="math inline">\(O({\frac{N}{\sqrt{P}}})\)</span></p>
+<p>减少人为通信：利用局部性原理减少 Cache miss</p>
+<p>先尝试最简单的算法，再通过性能分析找出瓶颈进行优化：手动 /
+利用工具。有时多核 Speedup 也能出现超线性（单核下问题规模大导致 Cache
+miss），因此针对不同情况要具体分析</p>
+<h3 id="lecture-7-gpu-architecture-and-cuda-programming">Lecture 7: GPU
+architecture and CUDA Programming</h3>
+<p>图形处理单元 GPU：用于高性能并行计算，有单独的内存</p>
+<p>CUDA 编程语言：类 C 语言，运行在 GPU 上。CUDA Thread ID
+可以达到三维（CUDA Thread 仅抽象概念，实际底层与线程不同），一个 Block
+内有多个 Thread</p>
+<p>主要分为两部分，Host Code：和普通 C / C++ 一样在 CPU
+上串行执行，Device Code：在 GPU 上并行执行 (SPMD)</p>
+<p>有些类似不同层次的 Cache，CUDA 中有三种内存类型：Per-Thread
+Memory、Per-Block Memory、Device Global Memory</p>
+<p>CUDA 同步相关：Barrier <code>__syncthreads()</code>、原子操作、Host /
+Device 同步（CUDA kernel 返回时的隐式 barrier）</p>
+<p>Nvidia V100 SM (Streaming Multi-processor) Sub-core：一个 Block 中每
+32 个 CUDA 线程组成一个 Warp（类似 ISPC 中的 Gang），每个 Sub-core 最多
+16 个 Warp。如果 Warp 中的 CUDA 线程指令相同则以 SIMD
+方式执行（硬件动态检查）</p>
+<p>V100 结构：每个 Sub-core 中有一个取指单元、多个功能单元，16 个
+Warp（每个 Warp 中有 32 个线程的寄存器）；4 个 Sub-Core 组成一个 SM
+unit，有共享内存和 L1 Cache；80 个 SM unit 共享 L2 Cache</p>
+<h3 id="lecture-8-data-parallel-thinking">Lecture 8: Data-Parallel
+Thinking</h3>
+<blockquote>
+<p>2024/4/1</p>
+</blockquote>
+<p>Data-parallel model: Map, Fold, Scan</p>
+<p>以求前缀和为例</p>
+<ul>
+<li>直接法复杂度 <span class="math inline">\(O(N)\)</span>，并行度 <span
+class="math inline">\(O(n)\)</span></li>
+<li>倍增法总复杂度 <span class="math inline">\(O(N\log
+N)\)</span>，并行度 <span class="math inline">\(O(\log N)\)</span></li>
+<li>树状数组法复杂度 <span class="math inline">\(O(N)\)</span>，并行度
+<span class="math inline">\(O(\log N)\)</span></li>
+</ul>
+<p>对不同规模数据使用不同规模算法，大型数据可以分治以保持局部性</p>
+<p>Segmented scan -&gt; Sparse matrix multiplication</p>
+<p>Gather-Scatter, GroupBy, Filter, Sort</p>
+<hr />
+<p>完成了 <a href="https://blog.mizuki.fun/posts/6a4d7d93.html">CS149
+Programming Assignment 2</a></p>
+<hr />
+<h3
+id="lecture-9-distributed-data-parallel-computing-using-spark">Lecture
+9: Distributed Data-Parallel Computing Using Spark</h3>
+<blockquote>
+<p>2024/4/5</p>
+</blockquote>
+<p>在分布式集群上的并行计算</p>
+<p>Message passing model，分布式文件系统</p>
+<p>MapReduce 模型</p>
+<ul>
+<li>Map：将数据映射到中间结果</li>
+<li>Reduce：将中间结果合并</li>
+</ul>
+<p>调度器职责：利用数据局部性分配任务，处理节点故障、慢节点</p>
+<p>MapReduce
+局限：只支持简单模型，每次迭代都需要读写磁盘（目前大多数场景下内存足够）</p>
+<p>Apache
+Spark：基于内存的分布式计算框架，适合中间数据多次使用的场景（迭代算法、数据查询）</p>
+<p>保证容错性：复制多个计算任务 / 检查点 + 回滚 / 维护日志</p>
+<p>RDD (Resilient Distributed
+Dataset)：弹性数据集，只读的有序集合，通过对持久性存储数据或现有 RDD
+进行确定性转换而创建，对其操作返回数据</p>
+<p>在 RDD 上链式操作会创建大量中间数据占用内存，优化：loop
+fusion（合并操作），tiling（分块操作）</p>
+<p>Narrow dependency（一个 RDD 只被一个子 RDD 依赖，便于合并）/ Wide
+dependency（多个依赖，通信成本 / 容错成本）</p>
+<p>RDD 实现：Lineage（记录操作历史，Log 开销低，可以从历史数据恢复）</p>
+<h3 id="lecture-10-efficiently-evaluating-dnns-on-gpus">Lecture 10:
+Efficiently Evaluating DNNs on GPUs</h3>
+<p>DNN (Deep Neural Networks)：深度神经网络</p>
+<p>CNN (Convolutional Neural Networks)：卷积神经网络</p>
+<p>Fully connected layer, Sparsely connected layer, Convolutional
+layer</p>
+<p>卷积层改进：算法改进、代码改进</p>
+<p>矩阵乘法优化：利用局部性原理、多线程、SIMD</p>
+<p>Blocked dense matrix multiplication 分块矩阵乘法：减少 Cache miss</p>
+<p>Hierarchical blocked matrix multiplication 分层分块矩阵乘法：减少
+Cache miss，</p>
+<p>多种不同的矩阵乘法优化 ......</p>
+<p>底层对 DNN 的优化，CuDNN，Tensorflow，使用低精度 ......</p>
+<h3 id="lecture-11-cache-coherence">Lecture 11: Cache Coherence</h3>
+<blockquote>
+<p>2024/4/6</p>
+</blockquote>
+<p>Cache / 内存一致性问题</p>
+<p>（Cache miss
+时）Read-through：直接从内存读取，Read-allocate：将数据读入 Cache</p>
+<p>（Cache hit）Write-back：只有在 Cache Line
+被替换时才写回内存，Write-through：每次写操作都写回内存</p>
+<p>（Cache miss）Write-allocate：将数据读入 Cache
+后再写入，Write-no-allocate：直接写入内存</p>
+<p>外部 IO：DMA (Direct Memory Access) 控制器直接访问内存</p>
+<p>SWMR (Single Writer Multiple Reader)
+Invariant：一个写者多个读者，读者可以并行读取，写者需要独占</p>
+<p>Data-Value Invariant (write serialization)</p>
+<p>Snooping cache-coherence schemes：每个 Cache 都监听内存操作</p>
+<p>Invalidation-based protocol：当一个 Cache 修改数据时，通知其它 Cache
+使其失效</p>
+<p>MSI protocol：Cache 状态 Modified, Shared, Invalid，处理器操作 PrRd,
+PrWr，总线事务 BusRd, BusRdX, BusUpd。对应有 MSI State Diagram</p>
+<p>MESI protocol：Cache 状态 Modified, Exclusive, Shared, Invalid</p>
+<p>监听广播的方案不可扩展，多核时会有大量广播，使用 Directory 优化</p>
+<p>False sharing：多线程读取同一 Cache Line
+中的不同变量，由于一致性协议导致额外开销</p>
+<h3 id="lecture-12-memory-consistency">Lecture 12: Memory
+Consistency</h3>
+<p>Consistency：多线程操作一个数据，由硬件提供机制，软件解决</p>
+<p>Coherence：一份数据有多份拷贝（如 Cache），由硬件解决</p>
+<blockquote>
+<p>2024/4/7</p>
+</blockquote>
+<p>Memory ordering：指令执行顺序</p>
+<p>Sequential consistency：严格顺序执行</p>
+<p>Relaxed consistency：允许乱序执行，提升性能</p>
+<p>乱序执行导致指令的执行顺序改变，在单线程下不会有问题，但多线程中不同线程观察到的行为不同，会出现与预期行为不一致的问题</p>
+<p>（感觉课件介绍太浅没看明白，正好一直没理解 C++ 的 Memory
+Ordering，抽时间再学了一下）</p>
+<hr />
+<p>完成了 <a href="https://blog.mizuki.fun/posts/1d4a4d05.html">CS149
+Programming Assignment 3</a></p>
+<hr />
+<h3
+id="lecture-13-fine-grained-synchronization-and-lock-free-programming">Lecture
+13: Fine-Grained Synchronization and Lock-Free Programming</h3>
+<blockquote>
+<p>2024/4/15</p>
+</blockquote>
+<p>死锁：线程之间限制导致无法继续执行。条件：互斥、持有并等待、不可抢占、循环等待</p>
+<p>活锁：线程一直做无用功（如 retry）</p>
+<p>饥饿：少量线程正常执行</p>
+<p>Test-and-Set：原子操作，设置一个变量并返回原值</p>
+<p>Compare-and-Swap / Exchange：原子操作，比较并交换</p>
+<p>基于 TAS 的锁、基于 Test-and-Test-and-Set
+的锁：延迟、通信开销、可扩展性的区别</p>
+<p>Ticket Lock：每个线程取一个号，按顺序执行</p>
+<p>基于基础的原子操作实现其它原子操作</p>
+<p>细粒度锁：提高并行度与产生额外开销之间的权衡</p>
+<blockquote>
+<p>2024/4/16</p>
+</blockquote>
+<p>无锁数据结构：部分场景性能更优</p>
+<p>Single reader single writer queue</p>
+<p>Lock-free stack / linked list</p>
+<h3 id="lecture-14-domain-specific-programming-languages">Lecture 14:
+Domain Specific Programming Languages</h3>
+<blockquote>
+<p>2024/4/17</p>
+</blockquote>
+<p>Domain Specific Language (DSL)：针对特定领域的编程语言</p>
+<p>Halide：图像处理领域的 DSL</p>
+<p>Lizst：求解网格上 PDE</p>
+<p>Good DSL system：易用、高性能、好语法</p>
+<h3 id="lecture-15-transactional-memory-1">Lecture 15: Transactional
+Memory 1</h3>
+<p>Declarative 声明式 / Imperative 命令式抽象：描述做什么 /
+描述怎么做</p>
+<p>Transactional Memory
+事务性内存：原子并且隔离的内存操作序列（类似数据库事务）、原子性、隔离性（事务提交前不可见）、可串行性。语义抽象为
+atomic block</p>
+<p>事务性内存中的事务可以看成一串对部分内存地址的读写操作，抽象为读和写的集合</p>
+<p>通过对事务内存读写集合的比较来判断是否真正有冲突（Read-Write
+冲突、Write-Write 冲突）</p>
+<blockquote>
+<p>2024/4/18</p>
+</blockquote>
+<p>事务性内存优点：易用、高效、失败后自动回滚</p>
+<p>事务（atomic block）与锁的不同：抽象级别、锁的功能更多</p>
+<p>TM 实现：数据版本控制策略（Undo log / Write buffer）、冲突检测（乐观
+/ 悲观）</p>
+<h3 id="lecture-16-transactional-memory-2">Lecture 16: Transactional
+Memory 2</h3>
+<p>（这后面的内容感觉基本都是介绍性质，就简单的看一遍过了）</p>
+<p>STM（Software Transactional Memory）实现：Intel STM</p>
+<p>HTM（Hardware Transactional Memory）实现</p>
+<p>异构计算：使用混合计算资源，高效。如 CPU + GPU，具体到 CPU
+中也有多种计算单元</p>
+<p>不同架构硬件的例子</p>
+<h3 id="lecture-17-hardware-specialization">Lecture 17: Hardware
+Specialization</h3>
+<blockquote>
+<p>2024/4/19</p>
+</blockquote>
+<p>追求能耗比，Choosing the right tool for the job</p>
+<p>Spatial Language：描述硬件结构</p>
+<p>Streaming Execution Model：数据流执行模型</p>
+<p>Kernel vs Stream</p>
+<p>HBM (High Bandwidth Memory)：高带宽内存</p>
+<h3 id="lecture-18-accessing-memory-course-wrap-up">Lecture 18:
+Accessing Memory + Course Wrap Up</h3>
+<p>DRAM access latency is not fixed</p>
+<p>最佳情况：Read（CAS）</p>
+<p>最坏情况：Precharge -&gt; Activate -&gt; Read（PRE + RAS + CAS）</p>
+<hr />
+<p>完成了 <a href="https://blog.mizuki.fun/posts/832ed8a6.html">CS149
+Programming Assignment 4</a></p>
+<hr />
+<p>完成了 <a href="https://blog.mizuki.fun/posts/d5b34e15.html">CS149
+Programming Assignment 5</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://blog.mizuki.fun">MizukiCry</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://blog.mizuki.fun/posts/a237868c.html">https://blog.mizuki.fun/posts/a237868c.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.mizuki.fun" target="_blank">MizukiCry's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/C/">C++</a><a class="post-meta__tags" href="/tags/CS149/">CS149</a><a class="post-meta__tags" href="/tags/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97/">并行计算</a></div><div class="post_share"><div class="social-share" data-image="https://raw.githubusercontent.com/MizukiCry/ImageHosting/master/img/file_3250485.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#lecture-1-why-parallelism-why-efficiency"><span class="toc-number">1.</span> <span class="toc-text">Lecture 1: Why
+Parallelism? Why Efficiency?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lecture-2-a-modern-multi-core-processor"><span class="toc-number">2.</span> <span class="toc-text">Lecture 2: A Modern
+Multi-Core Processor</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lecture-3-multi-core-arch-part-ii-ispc-programming-abstractions"><span class="toc-number">3.</span> <span class="toc-text">Lecture
+3: Multi-core Arch Part II + ISPC Programming Abstractions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lecture-4-parallel-programming-basics"><span class="toc-number">4.</span> <span class="toc-text">Lecture 4: Parallel
+Programming Basics</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lecture-5-performance-optimization-i-work-distribution-and-scheduling"><span class="toc-number">5.</span> <span class="toc-text">Lecture
+5: Performance Optimization I: Work Distribution and Scheduling</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lecture-6-performance-optimization-ii-locality-communication-and-contention"><span class="toc-number">6.</span> <span class="toc-text">Lecture
+6: Performance Optimization II: Locality, Communication, and
+Contention</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lecture-7-gpu-architecture-and-cuda-programming"><span class="toc-number">7.</span> <span class="toc-text">Lecture 7: GPU
+architecture and CUDA Programming</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lecture-8-data-parallel-thinking"><span class="toc-number">8.</span> <span class="toc-text">Lecture 8: Data-Parallel
+Thinking</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lecture-9-distributed-data-parallel-computing-using-spark"><span class="toc-number">9.</span> <span class="toc-text">Lecture
+9: Distributed Data-Parallel Computing Using Spark</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lecture-10-efficiently-evaluating-dnns-on-gpus"><span class="toc-number">10.</span> <span class="toc-text">Lecture 10:
+Efficiently Evaluating DNNs on GPUs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lecture-11-cache-coherence"><span class="toc-number">11.</span> <span class="toc-text">Lecture 11: Cache Coherence</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lecture-12-memory-consistency"><span class="toc-number">12.</span> <span class="toc-text">Lecture 12: Memory
+Consistency</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lecture-13-fine-grained-synchronization-and-lock-free-programming"><span class="toc-number">13.</span> <span class="toc-text">Lecture
+13: Fine-Grained Synchronization and Lock-Free Programming</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lecture-14-domain-specific-programming-languages"><span class="toc-number">14.</span> <span class="toc-text">Lecture 14:
+Domain Specific Programming Languages</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lecture-15-transactional-memory-1"><span class="toc-number">15.</span> <span class="toc-text">Lecture 15: Transactional
+Memory 1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lecture-16-transactional-memory-2"><span class="toc-number">16.</span> <span class="toc-text">Lecture 16: Transactional
+Memory 2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lecture-17-hardware-specialization"><span class="toc-number">17.</span> <span class="toc-text">Lecture 17: Hardware
+Specialization</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lecture-18-accessing-memory-course-wrap-up"><span class="toc-number">18.</span> <span class="toc-text">Lecture 18:
+Accessing Memory + Course Wrap Up</span></a></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2024 By MizukiCry</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>function loadGiscus () {
+  let nowTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+
+  const config = Object.assign({
+    src: 'https://giscus.app/client.js',
+    'data-repo': 'MizukiCry/blog',
+    'data-repo-id': 'R_kgDOID_XNw',
+    'data-category-id': 'DIC_kwDOID_XN84CUEiJ',
+    'data-mapping': 'pathname',
+    'data-theme': nowTheme,
+    'data-reactions-enabled': '1',
+    crossorigin: 'anonymous',
+    async: true
+  },null)
+
+  let ele = document.createElement('script')
+  for (let key in config) {
+    ele.setAttribute(key, config[key])
+  }
+  document.getElementById('giscus-wrap').insertAdjacentElement('afterbegin',ele)
+}
+
+function changeGiscusTheme () {
+  const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+
+  function sendMessage(message) {
+    const iframe = document.querySelector('iframe.giscus-frame');
+    if (!iframe) return;
+    iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+  }
+
+  sendMessage({
+    setConfig: {
+      theme: theme
+    }
+  });
+}
+
+if ('Giscus' === 'Giscus' || !false) {
+  if (false) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+  else loadGiscus()
+} else {
+  function loadOtherComment () {
+    loadGiscus()
+  }
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

@@ -1,0 +1,345 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>MizukiCry's Blog - 眩しさだけは、忘れなかった</title><meta name="author" content="MizukiCry"><meta name="copyright" content="MizukiCry"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一个无所事事的大学生。CS | Programming | Music Game | Galgame"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://blog.mizuki.fun/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":500},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: true,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'MizukiCry\'s Blog',
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2024-08-01 21:55:13'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = url => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      link.onload = () => resolve()
+      link.onerror = () => reject()
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link href="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet" /></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raw.githubusercontent.com/MizukiCry/ImageHosting/master/img/202408012118558.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">31</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">19</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fas fa-message"></i><span> Talk</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url('https://raw.githubusercontent.com/MizukiCry/ImageHosting/master/img/Aegleseeker.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="MizukiCry's Blog"><span class="site-name">MizukiCry's Blog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fas fa-message"></i><span> Talk</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">MizukiCry's Blog</h1><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://github.com/mizukicry" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:YuukaC@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://space.bilibili.com/62986991" target="_blank" title="bilibili"><i class="fab fa-bilibili"></i></a><a class="social-icon" href="https://twitter.com/LanrTabe" target="_blank" title=""><i class="fab fa-twitter"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="post_cover left"><a href="/posts/d7fa100d.html" title="高性能计算并行宇宙：OpenMP 初探"><img class="post-bg" src="https://raw.githubusercontent.com/MizukiCry/ImageHosting/master/img/file_3250491.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="高性能计算并行宇宙：OpenMP 初探"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/d7fa100d.html" title="高性能计算并行宇宙：OpenMP 初探">高性能计算并行宇宙：OpenMP 初探</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-04-22T16:30:13.000Z" title="发表于 2024-04-23 00:30:13">2024-04-23</time></span></div><div class="content">也是 CS149 的准备内容，这次是 OpenMP 的初探。
+1 OpenMP Introduction
+OpenMP：跨平台、多语言（C、C++、Fortran） 、可扩展的并行计算
+API，使得开发者可以轻松利用多核 CPU 的并行计算能力，加速程序的运行。
+只需要在编译时加上 -fopenmp 选项即可开启 OpenMP
+支持。
+在程序中插入 #pragma omp
+指令，编译器就会根据指令自动生成多线程代码，例如一个简单例子：
+1printf(&quot;Hello, World!\n&quot;);
+在前面加上一句：
+12#pragma omp parallelprintf(&quot;Hello, World!\n&quot;);
+程序就会根据硬件情况，在多个线程中执行 printf 语句。
+OpenMP 也可以用于循环并行化，例如：
+12#pragma omp parallel forfor (int i = 0; i &lt; 10; i++) &#123; /* do something */ &#125;
+2 OpenMP Usage
+ ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/posts/d5b34e15.html" title="CS149 Programming Assignment 5 - Big Graph Processing"><img class="post-bg" src="https://raw.githubusercontent.com/MizukiCry/ImageHosting/master/img/file_3250487.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="CS149 Programming Assignment 5 - Big Graph Processing"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/d5b34e15.html" title="CS149 Programming Assignment 5 - Big Graph Processing">CS149 Programming Assignment 5 - Big Graph Processing</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-04-21T04:20:58.000Z" title="发表于 2024-04-21 12:20:58">2024-04-21</time></span></div><div class="content">Stanford CS149 (Fall 2023) Parallel Computing
+Optional Programming Assignment 5: Big Graph Processing in OpenMP
+Github repo
+Part 1:
+Parallel "Top Down" Breadth-First Search (20 points)
+使用 OpenMP 加速从起点开始的 BFS
+看了一下给出的代码，就是维护两层队列，一层是当前层，一层是下一层，那么能够加速的就是每一次向下一层扩展的过程。
+这里选择对第一层 for
+循环进行并行化，由于每个点的边数不一样，所以选择动态的调度方式，并且每个线程都有自己的
+buffer，最后再合并。
+提示中说到了部分情况可以避免 CAS 操作，也就是提前判断一下
+1234567891011121314151617181920212223242526272829void top_down_step(Graph g, vertex_set *frontier, vertex_set *new_frontie ...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/posts/832ed8a6.html" title="CS149 Programming Assignment 4 - Chat149 - A Flash Attention Transformer DNN"><img class="post-bg" src="https://raw.githubusercontent.com/MizukiCry/ImageHosting/master/img/file_3250473.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="CS149 Programming Assignment 4 - Chat149 - A Flash Attention Transformer DNN"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/832ed8a6.html" title="CS149 Programming Assignment 4 - Chat149 - A Flash Attention Transformer DNN">CS149 Programming Assignment 4 - Chat149 - A Flash Attention Transformer DNN</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-04-19T06:12:20.000Z" title="发表于 2024-04-19 14:12:20">2024-04-19</time></span></div><div class="content">Stanford CS149 (Fall 2023) Parallel Computing
+Programming Assignment 4: Chat149 - A Flash Attention Transformer
+DNN
+Github repo
+环境配置
+妈的，外校学生又没有服务器，只能自己配环境，又不给
+requirements.txt，装个 torch 因为版本问题整了半天，翻 issue
+才知道要装 2.1.2 版本，至于其它 module 就一直编译靠报错找依赖（
+Warm-Up: Accessing Tensors
+(3 Points)
+简单来说就是实现
+4D-Tensor（类似四维数组）和一维数组之间的转换，秒
+（然而其实这个实现性能上还稍微有点问题，在 Part2 才查出来）
+1234567891011inline float fourDimRead(std::vector&lt;float&gt; &amp;tensor, int &amp;x, int &amp;y, int &amp;z,                      ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/posts/cf4811ca.html" title="高性能计算并行宇宙：CUDA 初探"><img class="post-bg" src="https://raw.githubusercontent.com/MizukiCry/ImageHosting/master/img/file_3250504.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="高性能计算并行宇宙：CUDA 初探"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/cf4811ca.html" title="高性能计算并行宇宙：CUDA 初探">高性能计算并行宇宙：CUDA 初探</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-04-08T14:25:18.000Z" title="发表于 2024-04-08 22:25:18">2024-04-08</time></span></div><div class="content">写 CS149 需要用到 CUDA，所以先简单学习一下 CUDA 的基础知识。
+1 CUDA Introduction
+CUDA（Compute Unified Device Architecture）是 NVIDIA
+推出的并行计算平台和编程模型，使得开发者可以利用 GPU
+的并行计算能力，加速程序的运行。
+要想写好 CUDA，首先要了解 CUDA 的编程模型。在 CUDA 中通常将 CPU
+及内存称为主机（Host），GPU 和显存称为设备（Device），Host
+通过调用函数（Kernel）将任务分配给 Device 执行。
+从体系结构上看，CPU 和 GPU 的区别在于：CPU
+有少量“大核”，适合串行任务，GPU 有大量“小核”，适合并行任务，下图展示了
+CPU 和 GPU 的体系结构差异：
+
+
+The GPU Devotes More Transistors to Data
+Processing
+
+接下来看看 GPU 的体系结构：每一次 Kernel 的调用都会启动大量的 CUDA
+Thread，一次 Kernel 调用中的所有 Thre ...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/posts/1d4a4d05.html" title="CS149 Programming Assignment 3 - A Simple Renderer in CUDA"><img class="post-bg" src="https://raw.githubusercontent.com/MizukiCry/ImageHosting/master/img/file_3250489.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="CS149 Programming Assignment 3 - A Simple Renderer in CUDA"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/1d4a4d05.html" title="CS149 Programming Assignment 3 - A Simple Renderer in CUDA">CS149 Programming Assignment 3 - A Simple Renderer in CUDA</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-04-07T15:41:43.000Z" title="发表于 2024-04-07 23:41:43">2024-04-07</time></span></div><div class="content">Stanford CS149 (Fall 2023) Parallel Computing
+Programming Assignment 3: A Simple Renderer in CUDA
+Github repo
+环境配置
+因为这次的 PA 要用到 CUDA，所以需要电脑有 NVIDIA 显卡，并且 Compute
+Capability &gt;= 7.5（20 代及以上显卡）
+我是用的 WSL，显卡驱动理论上只要外部环境装好了新版的 NVIDIA 驱动 WSL
+就能直接用了，可以用 nvidia-smi
+命令查看是否能识别到显卡。
+123456789101112131415161718192021~ » nvidia-smi                                                                                     mizukicry@S-TerminalMon Apr  8 09:49:30 2024+----------------------------------------- ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/posts/6a4d7d93.html" title="CS149 Programming Assignment 2 - Scheduling Task Graphs on a Multi-Core CPU"><img class="post-bg" src="https://raw.githubusercontent.com/MizukiCry/ImageHosting/master/img/file_3250487.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="CS149 Programming Assignment 2 - Scheduling Task Graphs on a Multi-Core CPU"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/6a4d7d93.html" title="CS149 Programming Assignment 2 - Scheduling Task Graphs on a Multi-Core CPU">CS149 Programming Assignment 2 - Scheduling Task Graphs on a Multi-Core CPU</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-04-01T15:30:18.000Z" title="发表于 2024-04-01 23:30:18">2024-04-01</time></span></div><div class="content">Stanford CS149 (Fall 2023) Parallel Computing
+Programming Assignment 2: Scheduling Task Graphs on a Multi-Core
+CPU
+Github repo
+Part A: Synchronous Bulk
+Task Launch
+创建三种不同的 Task execution engine，难点在于看懂要求
+Step 1: Move to a
+Parallel Task System
+普通多线程版本，感觉动态分配任务的话有点浪费资源，不过静态分配如果任务运行时间不同就有可能效果不好
+因为多线程之间有竞争，所以需要加锁或者原子操作
+123456789101112131415161718192021222324252627282930313233343536373839class TaskSystemParallelSpawn : public ITaskSystem &#123;private:  int num_threads_;  std::thread *threa ...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/posts/f3442c29.html" title="CS149 Programming Assignment 1 - Analyzing Parallel Program Performance on a Quad-Core CPU"><img class="post-bg" src="https://raw.githubusercontent.com/MizukiCry/ImageHosting/master/img/file_3250495.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="CS149 Programming Assignment 1 - Analyzing Parallel Program Performance on a Quad-Core CPU"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/f3442c29.html" title="CS149 Programming Assignment 1 - Analyzing Parallel Program Performance on a Quad-Core CPU">CS149 Programming Assignment 1 - Analyzing Parallel Program Performance on a Quad-Core CPU</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-03-28T04:44:34.000Z" title="发表于 2024-03-28 12:44:34">2024-03-28</time></span></div><div class="content">Stanford CS149 (Fall 2023) Parallel Computing
+Programming Assignment 1: Analyzing Parallel Program Performance on a
+Quad-Core CPU
+Github repo
+环境配置
+鉴于应该都不是 Stanford 的学生，只能本地配置环境了。我使用的是 WSL
+虚拟环境，Windows 大概是不能直接用的
+12345678910111213141516171819202122~ » neofetch                                                                                       mizukicry@S-Terminal            .-/+oossssoo+/-.               mizukicry@S-Terminal        `:+ssssssssssssssssss+:`           --------------------   ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/posts/a237868c.html" title="Stanford CS149 PARALLEL COMPUTING Notes (Fall 2023) / CMU15-418"><img class="post-bg" src="https://raw.githubusercontent.com/MizukiCry/ImageHosting/master/img/file_3250485.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Stanford CS149 PARALLEL COMPUTING Notes (Fall 2023) / CMU15-418"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/a237868c.html" title="Stanford CS149 PARALLEL COMPUTING Notes (Fall 2023) / CMU15-418">Stanford CS149 PARALLEL COMPUTING Notes (Fall 2023) / CMU15-418</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-03-25T14:32:55.000Z" title="发表于 2024-03-25 22:32:55">2024-03-25</time></span></div><div class="content">Stanford CS149 Parallel Computing:
+斯坦福一门并行计算的课，最近不知道该做些什么，感觉要是继续颓下去就废了。打算学一学这门课，在这里记一下看
+Slides 做的笔记
+课程主页：Fall
+2023
+网上似乎没有 CS149 的视频，这门课前身是 CMU 的
+15-418，可以看这门课的视频
+Lecture 1: Why
+Parallelism? Why Efficiency?
+
+2024/3/25
+
+目标：并行处理加速程序计算
+优化：减少线程之间通信 /
+同步，线程过多将严重影响性能，平均分配任务
+Fast != Efficient，考虑硬件消耗性价比
+利用硬件中针对专门指令的处理单元
+指令级并行 ILP
+内存定义：一段连续的地址空间，通过地址定位其中的每一个字节，访问内存通常使得
+CPU 等待影响性能
+超标量
+CPU：每个核心有多个逻辑单元（ALU），可以一个周期同时执行多条指令（若指令间相互独立）
+Cache：将部分内存缓存到 CPU
+自带的高速缓存中，若缓存命中则不需要访问内存，通常已 Cache Li ...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/posts/91a074c2.html" title="PNA Rust Project 1: The Rust toolbox"><img class="post-bg" src="https://raw.githubusercontent.com/MizukiCry/ImageHosting/master/img/file_3250475.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PNA Rust Project 1: The Rust toolbox"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/91a074c2.html" title="PNA Rust Project 1: The Rust toolbox">PNA Rust Project 1: The Rust toolbox</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-08-30T07:05:16.000Z" title="发表于 2023-08-30 15:05:16">2023-08-30</time></span></div><div class="content">Part 1: Make the tests
+compile
+配置好之后尝试运行 cargo test，发现编译错误：
+12345error[E0433]: failed to resolve: use of undeclared crate or module `assert_cmd` --&gt; tests\tests.rs:1:5  |1 | use assert_cmd::prelude::*;  |     ^^^^^^^^^^ use of undeclared crate or module `assert_cmd`
+显然是缺少相应的 crate，在 cargo.toml 里面加上。
+123[dev-dependencies]assert_cmd = &quot;0.11.0&quot;predicates = &quot;1.0.0&quot;
+dev-dependencies 和 dependencies
+的区别可以看官方文档
+再次运行 cargo test，发现编译错误：
+12345error[E0432]: unresolved import  ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/posts/10758369.html" title="CMU 15-445 Database Systems Project2"><img class="post-bg" src="https://raw.githubusercontent.com/MizukiCry/ImageHosting/master/img/file_3250492.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="CMU 15-445 Database Systems Project2"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/10758369.html" title="CMU 15-445 Database Systems Project2">CMU 15-445 Database Systems Project2</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-05-01T14:21:46.000Z" title="发表于 2023-05-01 22:21:46">2023-05-01</time></span></div><div class="content">Project #2 -
+B+Tree
+
+Task #1 - B+Tree Pages
+这一部分没什么好说的，把他给的函数写出来就行，基本都是一两行的事
+
+Task
+#2 - B+Tree Data Structure (Insertion, Deletion, Point Search)
+逆天 Task 之一
+B+Tree 这东西看着原理简单，在内存池上写起来怪恶心的
+比较简单的是查找，直接顺着往下定位到叶子节点就行。关于每个节点上的定位可以直接遍历或者二分定位。我用的二分，不过估计效率差别不大，瓶颈不应该在这一块
+至于插入，最好先画个图仔细想清楚再写，不然就会向我一样改了好几版，10
+天才摸出来这个 Task，感觉 DSA 白学了（
+我在向上更新的时候用的递归，感觉比较好理解。需要注意 Split
+时也要更新子节点的 parent_page_id
+然后是删除。因为课件讲得不是很细致，有些细节也稍微卡了一会。在 Merge
+时需要给右边节点的第一个子节点增加一个对应的 Key，这个 Key
+可以直接取父节点对应的 Key，然后删除父节点中的内容。
+ ...</div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/#content-inner">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/#content-inner">4</a><a class="extend next" rel="next" href="/page/2/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://raw.githubusercontent.com/MizukiCry/ImageHosting/master/img/202408012118558.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">MizukiCry</div><div class="author-info__description">一个无所事事的大学生。<br>CS | Programming | Music Game | Galgame</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">31</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">19</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mizukicry"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/mizukicry" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:YuukaC@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://space.bilibili.com/62986991" target="_blank" title="bilibili"><i class="fab fa-bilibili"></i></a><a class="social-icon" href="https://twitter.com/LanrTabe" target="_blank" title=""><i class="fab fa-twitter"></i></a></div></div><div class="sticky_layout"><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/Algorithm/" style="font-size: 1.16em; color: #999b9e">Algorithm</a> <a href="/tags/C/" style="font-size: 1.16em; color: #999b9e">C</a> <a href="/tags/C/" style="font-size: 1.5em; color: #99a9bf">C++</a> <a href="/tags/CS149/" style="font-size: 1.39em; color: #99a4b4">CS149</a> <a href="/tags/CUDA/" style="font-size: 1.1em; color: #999">CUDA</a> <a href="/tags/Database/" style="font-size: 1.33em; color: #99a2af">Database</a> <a href="/tags/Linux/" style="font-size: 1.1em; color: #999">Linux</a> <a href="/tags/OI/" style="font-size: 1.27em; color: #99a0a9">OI</a> <a href="/tags/OS/" style="font-size: 1.21em; color: #999ea4">OS</a> <a href="/tags/OpenMP/" style="font-size: 1.1em; color: #999">OpenMP</a> <a href="/tags/Python/" style="font-size: 1.16em; color: #999b9e">Python</a> <a href="/tags/Rust/" style="font-size: 1.27em; color: #99a0a9">Rust</a> <a href="/tags/SQL/" style="font-size: 1.1em; color: #999">SQL</a> <a href="/tags/UE4/" style="font-size: 1.1em; color: #999">UE4</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 1.1em; color: #999">工具</a> <a href="/tags/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97/" style="font-size: 1.44em; color: #99a7ba">并行计算</a> <a href="/tags/%E6%95%B0%E5%AD%A6/" style="font-size: 1.1em; color: #999">数学</a> <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 1.1em; color: #999">服务器</a> <a href="/tags/%E7%94%9F%E6%B4%BB/" style="font-size: 1.27em; color: #99a0a9">生活</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span><a class="card-more-btn" href="/archives/" title="查看更多">
+    <i class="fas fa-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/04/"><span class="card-archive-list-date">四月 2024</span><span class="card-archive-list-count">6</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/03/"><span class="card-archive-list-date">三月 2024</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/08/"><span class="card-archive-list-date">八月 2023</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/05/"><span class="card-archive-list-date">五月 2023</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/04/"><span class="card-archive-list-date">四月 2023</span><span class="card-archive-list-count">5</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/03/"><span class="card-archive-list-date">三月 2023</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/02/"><span class="card-archive-list-date">二月 2023</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/01/"><span class="card-archive-list-date">一月 2023</span><span class="card-archive-list-count">2</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">31</div></div><div class="webinfo-item"><div class="item-name">已运行时间 :</div><div class="item-count" id="runtimeshow" data-publishDate="2021-10-26T14:30:00.000Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2024-08-01T13:55:13.321Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2024 By MizukiCry</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>window.typedJSFn = {
+  init: (str) => {
+    window.typed = new Typed('#subtitle', Object.assign({
+      strings: str,
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50,
+    }, null))
+  },
+  run: (subtitleType) => {
+    if (true) {
+      if (typeof Typed === 'function') {
+        subtitleType()
+      } else {
+        getScript('https://cdn.jsdelivr.net/npm/typed.js/lib/typed.min.js').then(subtitleType)
+      }
+    } else {
+      subtitleType()
+    }
+  }
+}
+</script><script>function subtitleType () {
+  if (true) {
+    typedJSFn.init(["Beyond the sky, into the firmament.","眩しさだけは、忘れなかった","Every \"END\" is a new \"BEGINNING\".","\\こんにちは~/","うたかたのせかいで"])
+  } else {
+    document.getElementById("subtitle").innerHTML = 'Beyond the sky, into the firmament.'
+  }
+}
+typedJSFn.run(subtitleType)</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

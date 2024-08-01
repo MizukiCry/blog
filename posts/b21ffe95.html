@@ -1,0 +1,469 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>rCore Lab2(Chapter4) | MizukiCry's Blog</title><meta name="author" content="MizukiCry"><meta name="copyright" content="MizukiCry"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="刚开始像做 Lab1 那样随便看了看，结果看完立马就忘了，概念有点多，于是认真记一下。  基础概念 分页内存管理 页表实现   Page Table   页面（Page）：每个应用的地址空间被分成的小块 页帧（Frame）：可用的物理内存被分成的小块 虚拟页号（VPN, V"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://blog.mizuki.fun/posts/b21ffe95.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":500},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: true,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'rCore Lab2(Chapter4)',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-02-06 14:01:24'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = url => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      link.onload = () => resolve()
+      link.onerror = () => reject()
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link href="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet" /></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raw.githubusercontent.com/MizukiCry/ImageHosting/master/img/202408012118558.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">31</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">19</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fas fa-message"></i><span> Talk</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://raw.githubusercontent.com/MizukiCry/ImageHosting/master/img/file_3250496.png')"><nav id="nav"><span id="blog-info"><a href="/" title="MizukiCry's Blog"><span class="site-name">MizukiCry's Blog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fas fa-message"></i><span> Talk</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">rCore Lab2(Chapter4)</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-11-20T08:31:19.000Z" title="发表于 2022-11-20 16:31:19">2022-11-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-02-06T06:01:24.000Z" title="更新于 2023-02-06 14:01:24">2023-02-06</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="rCore Lab2(Chapter4)"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>刚开始像做 Lab1
+那样随便看了看，结果看完立马就忘了，概念有点多，于是认真记一下。</p>
+<hr />
+<h2 id="基础概念">基础概念</h2>
+<h3 id="分页内存管理">分页内存管理</h3>
+<h4 id="页表实现">页表实现</h4>
+<figure>
+<img
+src="http://rcore-os.cn/rCore-Tutorial-Book-v3/_images/page-table.png"
+alt="Page Table" />
+<figcaption aria-hidden="true">Page Table</figcaption>
+</figure>
+<ul>
+<li><p>页面（Page）：每个应用的地址空间被分成的小块</p></li>
+<li><p>页帧（Frame）：可用的物理内存被分成的小块</p></li>
+<li><p>虚拟页号（VPN, Virtual Page Number）</p></li>
+<li><p>物理页号（PPN, Physical Page Number）</p></li>
+<li><p>页表（Page Table）：每个应用有一个页表，用于 VPN 与 PPN
+转换，其中每个 VPN
+也有一组保护位（rwx）表示权限。页表同样存放在内存中</p></li>
+<li><p>逻辑段：由多个虚拟页面组成，在应用视角是一块连续内存</p></li>
+</ul>
+<p>多级页表：Trie 实现</p>
+<p>默认 MMU（Memory Management Unit）未启用，需修改 CSR
+<code>satp</code></p>
+<figure>
+<img src="http://rcore-os.cn/rCore-Tutorial-Book-v3/_images/satp.png"
+alt="satp" />
+<figcaption aria-hidden="true">satp</figcaption>
+</figure>
+<blockquote>
+<p>MODE：页表模式，0 表示访问物理地址，8 表示 SV39 虚拟地址
+PPN：根页表的物理页号</p>
+</blockquote>
+<h4 id="地址格式">地址格式</h4>
+<figure>
+<img
+src="http://rcore-os.cn/rCore-Tutorial-Book-v3/_images/sv39-va-pa.png"
+alt="Address Format" />
+<figcaption aria-hidden="true">Address Format</figcaption>
+</figure>
+<p>单个页面大小设置为 4KiB，则如图 Page Offset 为 12 位</p>
+<p>SV39 分页模式下虚拟地址只有 39 位有效长度，则只有最低 256 GiB（38
+位为 0），最高 256 GiB（38 位为 1）有效</p>
+<h4 id="页表项">页表项</h4>
+<p>PTE（Page Table Entry）</p>
+<figure>
+<img
+src="http://rcore-os.cn/rCore-Tutorial-Book-v3/_images/sv39-pte.png"
+alt="PTE" />
+<figcaption aria-hidden="true">PTE</figcaption>
+</figure>
+<p>其中 <span class="math inline">\([53:10]\)</span> 为 PPN，V(Valid)
+表示是否合法，R/W/X 代表 读/写/执行，U(User) 表示是否允许 U
+特权级访问</p>
+<h4 id="多级页表">多级页表</h4>
+<p>虚拟地址 VA 有 39 位，则 VPN 有 <span
+class="math inline">\(2^{27}\)</span> 种，如果存储所有的 PTE
+则需大量内存，因此可以使用 Trie 动态插入。</p>
+<p>将 VPN 分为 3 段，则每段 9 位，对应到 Trie 上则有 512 个
+子节点，对于叶节点每个子节点对应一个 PTE，大小 8
+字节，正好可以放进一个物理页帧内，则用页帧表示 Trie
+的一个节点；而非叶节点每一个子节点对应一个节点，即用 PPN
+表示，此即三级页表。</p>
+<blockquote>
+<p>对于非叶节点，此页帧其中每一个 PTE的表项中，V 为 0 表示无效，V 为 1
+且 R/W/X 均为 0 表示其指向下一级页表，V 为 1 且 R/W/X 不全为 0
+则其对应一个合法的 PTE。</p>
+</blockquote>
+<ul>
+<li>快表（TLB）：相当于多级页表的一个 Cache，在修改 CSR
+<code>satp</code> 或修改一个 PTE 后失效，可以使用
+<code>sfence.vma</code> 手动刷新整个或其中一个映射项</li>
+</ul>
+<hr />
+<h3 id="管理-sv39-多级页表">管理 SV39 多级页表</h3>
+<ul>
+<li>物理页帧管理器：<code>StackFrameAllocator</code></li>
+</ul>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">pub</span> <span class="keyword">struct</span> <span class="title class_">StackFrameAllocator</span> &#123;</span><br><span class="line">    current: <span class="type">usize</span>,         <span class="comment">// 空闲内存的起始物理页号</span></span><br><span class="line">    end: <span class="type">usize</span>,             <span class="comment">// 空闲内存的结束物理页号</span></span><br><span class="line">    recycled: <span class="type">Vec</span>&lt;<span class="type">usize</span>&gt;,   <span class="comment">// 回收的 PPN</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">FrameAllocator</span> <span class="keyword">for</span> <span class="title class_">StackFrameAllocator</span> &#123;</span><br><span class="line">    <span class="comment">// 申请 / 回收</span></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">alloc</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>) <span class="punctuation">-&gt;</span> <span class="type">Option</span>&lt;PhyPageNum&gt;;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">dealloc</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>, ppn: PhysPageNum);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 公共接口</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">frame_alloc</span>() <span class="punctuation">-&gt;</span> <span class="type">Option</span>&lt;FrameTracker&gt;;</span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">frame_dealloc</span>(ppn: PhysPageNum);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>物理页帧（PPN 的包装）：<code>FrameTracker</code></li>
+</ul>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 实现了 Drop Trait 自动回收</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">struct</span> <span class="title class_">FrameTracker</span> &#123;</span><br><span class="line">    <span class="keyword">pub</span> ppn: PhysPageNum,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="多级页表实现">多级页表实现</h4>
+<p>如之前所说，页表的每一个节点都存在一个 Frame 中</p>
+<ul>
+<li>页表根节点</li>
+</ul>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">pub</span> <span class="keyword">struct</span> <span class="title class_">PageTable</span> &#123;</span><br><span class="line">    root_ppn: PhysPageNum,</span><br><span class="line">    frames: <span class="type">Vec</span>&lt;FrameTracker&gt;,  <span class="comment">// 保存所有节点（包括根节点），方便自动回收</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">PageTable</span> &#123;</span><br><span class="line">    <span class="comment">// 页表插入 / 删除接口</span></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">map</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>, vpn: VirtPageNum, ppn: PhysPageNum, flags: PTEFlags);</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">unmap</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>, vpn: VirtPageNum);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在启用分页模式后，S 和 U 特权级下访问内存都需要经过 MMU
+翻译，则需要提前在页表中插入相应的 <code>VPN -&gt; PPN</code>
+映射关系。这里采用恒等映射（VPN = PPN）</p>
+<h4 id="内核访问内存">内核访问内存</h4>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">impl</span> <span class="title class_">PhysPageNum</span> &#123;</span><br><span class="line">    <span class="comment">// 通过 `core::slice::from_raw_parts_mut` 将 Frame 转换为不同类型的切片</span></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">get_pte_array</span>(&amp;<span class="keyword">self</span>) <span class="punctuation">-&gt;</span> &amp;<span class="symbol">&#x27;static</span> <span class="keyword">mut</span> [PageTableEntry];</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">get_bytes_array</span>(&amp;<span class="keyword">self</span>) <span class="punctuation">-&gt;</span> &amp;<span class="symbol">&#x27;static</span> <span class="keyword">mut</span> [<span class="type">u8</span>];</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">get_mut</span>&lt;T&gt;(&amp;<span class="keyword">self</span>) <span class="punctuation">-&gt;</span> &amp;<span class="symbol">&#x27;static</span> <span class="keyword">mut</span> T;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">impl</span> <span class="title class_">PageTable</span> &#123;</span><br><span class="line">    <span class="comment">// 在页表中查找 PTE，前者在不存在时新建</span></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">find_pte_create</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>, vpn: VirtPageNum) <span class="punctuation">-&gt;</span> <span class="type">Option</span>&lt;&amp;<span class="keyword">mut</span> PageTableEntry&gt;;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">find_pte</span>(&amp;<span class="keyword">self</span>, vpn: VirtPageNum) <span class="punctuation">-&gt;</span> <span class="type">Option</span>&lt;&amp;<span class="keyword">mut</span> PageTableEntry&gt;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>手动查询</li>
+</ul>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">impl</span> <span class="title class_">PageTable</span> &#123;</span><br><span class="line">    <span class="comment">// 手动由 satp 创建页表并提供查询</span></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">from_token</span>(satp: <span class="type">usize</span>) <span class="punctuation">-&gt;</span> <span class="keyword">Self</span>;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">translate</span>(&amp;<span class="keyword">self</span>. vpn: VirPageNum) <span class="punctuation">-&gt;</span> <span class="type">Option</span>&lt;PageTableEntry&gt;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr />
+<h3 id="内核与应用的地址空间">内核与应用的地址空间</h3>
+<h4 id="实现地址空间抽象">实现地址空间抽象</h4>
+<ul>
+<li>逻辑段：一段连续地址的虚拟内存</li>
+</ul>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">pub</span> <span class="keyword">struct</span> <span class="title class_">MapArea</span> &#123;</span><br><span class="line">    vpn_range: VPNRange,    <span class="comment">// 虚拟页号的连续区间</span></span><br><span class="line">    data_frames: BTreeMap&lt;VirtPageNum, FrameTracker&gt;,   <span class="comment">// VPN PPN 映射方式</span></span><br><span class="line">    map_type: MapType,          <span class="comment">// 映射类型</span></span><br><span class="line">    map_perm: MapPermission,    <span class="comment">// 访问权限</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">enum</span> <span class="title class_">MapType</span> &#123;</span><br><span class="line">    Identical,  <span class="comment">// 恒等映射</span></span><br><span class="line">    Framed,     <span class="comment">// 随机映射</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>地址空间：一系列有关联的不一定连续的逻辑段，可视为一个应用或内核的全部空间</li>
+</ul>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">pub</span> <span class="keyword">struct</span> <span class="title class_">MemorySet</span> &#123;</span><br><span class="line">    page_table: PageTable,</span><br><span class="line">    areas: <span class="type">Vec</span>&lt;MapArea&gt;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">impl</span> <span class="title class_">MemorySet</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">new_bare</span>() <span class="punctuation">-&gt;</span> <span class="keyword">Self</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在当前地址空间插入一个新的逻辑段，可选初始化数据（映射方式为 Framed）</span></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">push</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>, <span class="keyword">mut</span> map_area: MapArea, data: <span class="type">Option</span>&lt;&amp;[<span class="type">u8</span>]&gt;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 调用 push 在当前地址空间插入一个逻辑段（映射方式为 Framed）</span></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">insert_framed_area</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>, start_va: VirtAddr, end_va: VirtAddr, permission: MapPermission);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">new_kernal</span>() <span class="punctuation">-&gt;</span> <span class="keyword">Self</span>;    <span class="comment">// 生成内核的地址空间</span></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">from_elf</span>(elf_data: &amp;[<span class="type">u8</span>]) <span class="punctuation">-&gt;</span> (<span class="keyword">Self</span>, <span class="type">usize</span>, <span class="type">usize</span>);   <span class="comment">// 生成 elf 文件对应的地址空间</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">impl</span> <span class="title class_">MapArea</span> &#123;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">new</span>(start_va: VirtAddr, end_va: VirtAddr, map_type: MapType, map_perm: MapPermission) <span class="punctuation">-&gt;</span> <span class="keyword">Self</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在对应的页表中添加或删除逻辑段</span></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">map</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>, page_table: &amp;<span class="keyword">mut</span> PageTable);</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">unmap</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>, page_table: &amp;<span class="keyword">mut</span> PageTable);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将数据拷贝到当前逻辑段在页表中对应的位置</span></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">copy_data</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>, page_table: &amp;<span class="keyword">mut</span> PageTable, data: &amp;[<span class="type">u8</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 根据 MapType 映射，是 map / unmap 的基础</span></span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">map_one</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>, page_table: &amp;<span class="keyword">mut</span> PageTable, vpn: VirtPageNum);</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">unmap_one</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>, page_table: &amp;<span class="keyword">mut</span> PageTable, vpn: VirtPageNum);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="内核地址空间">内核地址空间</h4>
+<p>在 SV39 分页模式下，内核访问内存也经过 MMU
+翻译，因此需要为内核构造一个地址空间，允许内核各数据段能够正常访问，包含所有应用的内核栈和一个跳板（Trampoline）（后面会提到）</p>
+<p>通过 MMU 检查的高 256GiB 与 低 256GiB：</p>
+<figure>
+<img
+src="http://rcore-os.cn/rCore-Tutorial-Book-v3/_images/kernel-as-high.png"
+alt="Kernel Address Space (High)" />
+<figcaption aria-hidden="true">Kernel Address Space (High)</figcaption>
+</figure>
+<figure>
+<img
+src="http://rcore-os.cn/rCore-Tutorial-Book-v3/_images/kernel-as-low.png"
+alt="Kernel Address Space (Low)" />
+<figcaption aria-hidden="true">Kernel Address Space (Low)</figcaption>
+</figure>
+<p>保护页面（Guard Page）：当应用内核栈溢出时被访问到即引发异常</p>
+<p>根据地址空间分布就可以实现 <code>MemorySet</code> 中的
+<code>new_kernel()</code> 函数了</p>
+<h4 id="应用地址空间">应用地址空间</h4>
+<p>在启用分页模式后，应用访问的为虚拟地址，所有应用可以使用同一个链接脚本。起始地址
+<code>BASE_ADDRESS</code> 设为 0x00010000（0x0 通常代表空指针）</p>
+<p>应用地址空间布局：</p>
+<figure>
+<img
+src="http://rcore-os.cn/rCore-Tutorial-Book-v3/_images/app-as-full.png"
+alt="Application Address Space" />
+<figcaption aria-hidden="true">Application Address Space</figcaption>
+</figure>
+<p>加载应用的 <code>loader</code> 模块：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">get_num_app</span>() <span class="punctuation">-&gt;</span> <span class="type">usize</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">get_app_data</span>(app_id: <span class="type">usize</span>) <span class="punctuation">-&gt;</span> &amp;<span class="symbol">&#x27;static</span> [<span class="type">u8</span>];</span><br></pre></td></tr></table></figure>
+<p><code>build.rs</code> 生成的应用保留 ELF 逻辑段信息，则可以通过外部
+crate 进行解析：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">impl</span> <span class="title class_">MemorySet</span> &#123;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">from_elf</span>(elf_data: &amp;[<span class="type">u8</span>]) <span class="punctuation">-&gt;</span> (<span class="keyword">Self</span>, <span class="type">usize</span>, <span class="type">usize</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr />
+<h3 id="分页模式下任务切换">分页模式下任务切换</h3>
+<p>切换 <code>satp</code> 导致多级页表不同，而切换 <code>satp</code> 后
+<code>pc</code>
+只是简单地自增，则要求前后指令在两个页表的映射下地址连续。</p>
+<p>如之前所述，Trap
+上下文需要放在应用地址空间中而非内核栈，因为在保存到内核栈前，我们需要先切换地址空间（token
+写入 satp），保存内核栈栈顶地址，则需要两个 CSR，而 RISC-V 只提供了一个
+<code>sscratch</code></p>
+<p>因此，<code>__alltraps</code> 和 <code>__restore</code>
+也要进行一定的修改</p>
+<p>为了保证页表切换前后指令的连续，将 <code>trap.S</code>
+存在跳板段，而对于内核和应用跳板都处于同一个位置，则可以连续运行</p>
+<hr />
+<h2 id="编程作业">编程作业</h2>
+<h3 id="重写-sys_get_time-和-sys_task_info">重写
+<code>sys_get_time</code> 和 <code>sys_task_info</code></h3>
+<p>首先注意到，<code>sys_get_time</code> 中的 <code>ts</code>
+是应用视角的地址，而在实际的 <code>syscall</code>
+调用中系统处于内核态，这也是源函数失效的原因</p>
+<p>因此，我们需要把 <code>ts</code>
+转为内核态下的地址，为了方便可以新增一个从指定 token
+进行翻译的函数：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// os/src/mm//mod.rs</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">translate_by_token</span>(token: <span class="type">usize</span>, va: VirtAddr) <span class="punctuation">-&gt;</span> <span class="type">Option</span>&lt;PhysAddr&gt; &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">ppn</span> = PageTable::<span class="title function_ invoke__">from_token</span>(token).<span class="title function_ invoke__">translate</span>(va.<span class="title function_ invoke__">floor</span>())?.<span class="title function_ invoke__">ppn</span>();</span><br><span class="line">    <span class="title function_ invoke__">Some</span>(PhysAddr::<span class="title function_ invoke__">from</span>(PhysAddr::<span class="title function_ invoke__">from</span>(ppn).<span class="number">0</span> + va.<span class="title function_ invoke__">page_offset</span>()))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>于是我们就可以轻松实现 <code>sys_get_time</code>：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// os/src/syscall/process.rs</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">sys_get_time</span>(_ts: *<span class="keyword">mut</span> TimeVal, _tz: <span class="type">usize</span>) <span class="punctuation">-&gt;</span> <span class="type">isize</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">us</span> = <span class="title function_ invoke__">get_time_us</span>();</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">ts_pa</span> = <span class="title function_ invoke__">translate_by_token</span>(<span class="title function_ invoke__">current_user_token</span>(), VirtAddr::<span class="title function_ invoke__">from</span>(_ts <span class="keyword">as</span> <span class="type">usize</span>)).<span class="title function_ invoke__">unwrap</span>().<span class="number">0</span> <span class="keyword">as</span> *<span class="keyword">mut</span> TimeVal;</span><br><span class="line">    <span class="keyword">unsafe</span> &#123;</span><br><span class="line">        *ts_pa = TimeVal &#123;</span><br><span class="line">            sec: us / <span class="number">1_000_000</span>,</span><br><span class="line">            usec: us % <span class="number">1_000_000</span>,</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="number">0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>于是 <code>sys_task_info</code> 同理，在 lab1
+的基础上加上地址的翻译即可：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// os/src/syscall/process.rs</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">sys_task_info</span>(ti: *<span class="keyword">mut</span> TaskInfo) <span class="punctuation">-&gt;</span> <span class="type">isize</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">ti_pa</span> = <span class="title function_ invoke__">translate_by_token</span>(<span class="title function_ invoke__">current_user_token</span>(), VirtAddr::<span class="title function_ invoke__">from</span>(ti <span class="keyword">as</span> <span class="type">usize</span>)).<span class="title function_ invoke__">unwrap</span>().<span class="number">0</span> <span class="keyword">as</span> *<span class="keyword">mut</span> TaskInfo;</span><br><span class="line">    <span class="keyword">unsafe</span> &#123;</span><br><span class="line">        *ti_pa = TaskInfo &#123;</span><br><span class="line">            status: <span class="title function_ invoke__">get_current_task_status</span>(),</span><br><span class="line">            syscall_times: <span class="title function_ invoke__">get_syscall_times</span>(),</span><br><span class="line">            time: <span class="title function_ invoke__">get_current_run_time</span>(),</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="number">0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>然而我在 lab1 中用的奇怪 <code>get_time_ms</code> 方法在 lab2
+里面本地测试可以通过，Github CI 却过不了，最终写成朴素的
+<code>get_time_us() / 1000</code> 就过了。。为此浪费了几小时（Github CI
+这个自动测试是真的慢）</p>
+</blockquote>
+<h3 id="实现-mmap-和-munmap">实现 <code>mmap</code> 和
+<code>munmap</code></h3>
+<p>刚开始想着自己用 <code>frame_alloc</code>
+实现，结果写了一大堆还跑不起来。。</p>
+<p>发现应用的 <code>TaskControlBlock</code> 的 <code>MemorySet</code>
+中存在 <code>insert_framed_area</code> 方法，直接调用即可。主要接口在
+<code>TaskManager</code> 中实现</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// os/src/syscall/process.rs</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">sys_mmap</span>(start: <span class="type">usize</span>, len: <span class="type">usize</span>, port: <span class="type">usize</span>) <span class="punctuation">-&gt;</span> <span class="type">isize</span> &#123;</span><br><span class="line">    <span class="title function_ invoke__">task_mmap</span>(start, len, port)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">sys_munmap</span>(start: <span class="type">usize</span>, len: <span class="type">usize</span>) <span class="punctuation">-&gt;</span> <span class="type">isize</span> &#123;</span><br><span class="line">    <span class="title function_ invoke__">task_munmap</span>(start, len)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// os/src/task/mod.rs</span></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">TaskManager</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">task_mmap</span>(&amp;<span class="keyword">self</span>, start: <span class="type">usize</span>, len: <span class="type">usize</span>, port: <span class="type">usize</span>) <span class="punctuation">-&gt;</span> <span class="type">isize</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">start_va</span> = VirtAddr::<span class="title function_ invoke__">from</span>(start);</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">end_va</span> = VirtAddr::<span class="title function_ invoke__">from</span>(start + len);</span><br><span class="line">        <span class="keyword">if</span> !start_va.<span class="title function_ invoke__">aligned</span>() || (port &amp; !<span class="number">0x7</span>) != <span class="number">0</span> || (port &amp; <span class="number">0x7</span>) == <span class="number">0</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">inner</span> = <span class="keyword">self</span>.inner.<span class="title function_ invoke__">exclusive_access</span>();</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">current_task</span> = inner.current_task;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">memory_set</span> = &amp;<span class="keyword">mut</span> inner.tasks[current_task].memory_set;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">start_vpn</span> = start_va.<span class="title function_ invoke__">floor</span>();</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">end_vpn</span> = end_va.<span class="title function_ invoke__">ceil</span>();</span><br><span class="line">        <span class="keyword">for</span> <span class="variable">vpn</span> <span class="keyword">in</span> VPNRange::<span class="title function_ invoke__">new</span>(start_vpn, end_vpn) &#123;</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">let</span> <span class="variable">Some</span>(pte) = memory_set.<span class="title function_ invoke__">translate</span>(vpn) &#123;</span><br><span class="line">                <span class="keyword">if</span> pte.<span class="title function_ invoke__">is_valid</span>() &#123;</span><br><span class="line">                    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">map_perm</span> = MapPermission::<span class="title function_ invoke__">from_bits</span>((port <span class="keyword">as</span> <span class="type">u8</span>) &lt;&lt; <span class="number">1</span>).<span class="title function_ invoke__">unwrap</span>() | MapPermission::U;</span><br><span class="line">        memory_set.<span class="title function_ invoke__">insert_framed_area</span>(start_va, end_va, map_perm);</span><br><span class="line">        <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">task_munmap</span>(&amp;<span class="keyword">self</span>, start: <span class="type">usize</span>, len: <span class="type">usize</span>) <span class="punctuation">-&gt;</span> <span class="type">isize</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">start_va</span> = VirtAddr::<span class="title function_ invoke__">from</span>(start);</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">end_va</span> = VirtAddr::<span class="title function_ invoke__">from</span>(start + len);</span><br><span class="line">        <span class="keyword">if</span> !start_va.<span class="title function_ invoke__">aligned</span>() &#123;</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">inner</span> = <span class="keyword">self</span>.inner.<span class="title function_ invoke__">exclusive_access</span>();</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">current_task</span> = inner.current_task;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">memory_set</span> = &amp;<span class="keyword">mut</span> inner.tasks[current_task].memory_set;</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">start_vpn</span> = start_va.<span class="title function_ invoke__">floor</span>();</span><br><span class="line">        <span class="keyword">let</span> <span class="variable">end_vpn</span> = end_va.<span class="title function_ invoke__">ceil</span>();</span><br><span class="line">        <span class="keyword">for</span> <span class="variable">vpn</span> <span class="keyword">in</span> VPNRange::<span class="title function_ invoke__">new</span>(start_vpn, end_vpn) &#123;</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">let</span> <span class="variable">Some</span>(pte) = memory_set.<span class="title function_ invoke__">translate</span>(vpn) &#123;</span><br><span class="line">                <span class="keyword">if</span> !pte.<span class="title function_ invoke__">is_valid</span>() &#123;</span><br><span class="line">                    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        memory_set.<span class="title function_ invoke__">unmap</span>(start_vpn, end_vpn);</span><br><span class="line">        <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">task_mmap</span>(start: <span class="type">usize</span>, len: <span class="type">usize</span>, port: <span class="type">usize</span>) <span class="punctuation">-&gt;</span> <span class="type">isize</span> &#123;</span><br><span class="line">    TASK_MANAGER.<span class="title function_ invoke__">task_mmap</span>(start, len, port)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">task_munmap</span>(start: <span class="type">usize</span>, len: <span class="type">usize</span>) <span class="punctuation">-&gt;</span> <span class="type">isize</span> &#123;</span><br><span class="line">    TASK_MANAGER.<span class="title function_ invoke__">task_munmap</span>(start, len)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中为实现方便在 <code>MemorySet</code> 中增添了一个
+<code>unmap</code> 接口：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// os/src/mm/memory_set.rs</span></span><br><span class="line"><span class="keyword">impl</span> <span class="title class_">MemorySet</span> &#123;</span><br><span class="line">    <span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">unmap</span>(&amp;<span class="keyword">mut</span> <span class="keyword">self</span>, start_vpn: VirtPageNum, end_vpn: VirtPageNum) &#123;</span><br><span class="line">        <span class="keyword">for</span> <span class="variable">vpn</span> <span class="keyword">in</span> VPNRange::<span class="title function_ invoke__">new</span>(start_vpn, end_vpn) &#123;</span><br><span class="line">            <span class="keyword">self</span>.page_table.<span class="title function_ invoke__">unmap</span>(vpn);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="https://github.com/LearningOS/lab2-os4-MizukiCry">Github
+Repository</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://blog.mizuki.fun">MizukiCry</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://blog.mizuki.fun/posts/b21ffe95.html">https://blog.mizuki.fun/posts/b21ffe95.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.mizuki.fun" target="_blank">MizukiCry's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Rust/">Rust</a><a class="post-meta__tags" href="/tags/OS/">OS</a></div><div class="post_share"><div class="social-share" data-image="https://raw.githubusercontent.com/MizukiCry/ImageHosting/master/img/file_3250496.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5"><span class="toc-number">1.</span> <span class="toc-text">基础概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E9%A1%B5%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="toc-number">1.1.</span> <span class="toc-text">分页内存管理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A1%B5%E8%A1%A8%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.1.1.</span> <span class="toc-text">页表实现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%B0%E5%9D%80%E6%A0%BC%E5%BC%8F"><span class="toc-number">1.1.2.</span> <span class="toc-text">地址格式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A1%B5%E8%A1%A8%E9%A1%B9"><span class="toc-number">1.1.3.</span> <span class="toc-text">页表项</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E7%BA%A7%E9%A1%B5%E8%A1%A8"><span class="toc-number">1.1.4.</span> <span class="toc-text">多级页表</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%A1%E7%90%86-sv39-%E5%A4%9A%E7%BA%A7%E9%A1%B5%E8%A1%A8"><span class="toc-number">1.2.</span> <span class="toc-text">管理 SV39 多级页表</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E7%BA%A7%E9%A1%B5%E8%A1%A8%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.2.1.</span> <span class="toc-text">多级页表实现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E6%A0%B8%E8%AE%BF%E9%97%AE%E5%86%85%E5%AD%98"><span class="toc-number">1.2.2.</span> <span class="toc-text">内核访问内存</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E6%A0%B8%E4%B8%8E%E5%BA%94%E7%94%A8%E7%9A%84%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4"><span class="toc-number">1.3.</span> <span class="toc-text">内核与应用的地址空间</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E6%8A%BD%E8%B1%A1"><span class="toc-number">1.3.1.</span> <span class="toc-text">实现地址空间抽象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E6%A0%B8%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4"><span class="toc-number">1.3.2.</span> <span class="toc-text">内核地址空间</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4"><span class="toc-number">1.3.3.</span> <span class="toc-text">应用地址空间</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E9%A1%B5%E6%A8%A1%E5%BC%8F%E4%B8%8B%E4%BB%BB%E5%8A%A1%E5%88%87%E6%8D%A2"><span class="toc-number">1.4.</span> <span class="toc-text">分页模式下任务切换</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E7%A8%8B%E4%BD%9C%E4%B8%9A"><span class="toc-number">2.</span> <span class="toc-text">编程作业</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E5%86%99-sys_get_time-%E5%92%8C-sys_task_info"><span class="toc-number">2.1.</span> <span class="toc-text">重写
+sys_get_time 和 sys_task_info</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0-mmap-%E5%92%8C-munmap"><span class="toc-number">2.2.</span> <span class="toc-text">实现 mmap 和
+munmap</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2024 By MizukiCry</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>function loadGiscus () {
+  let nowTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+
+  const config = Object.assign({
+    src: 'https://giscus.app/client.js',
+    'data-repo': 'MizukiCry/blog',
+    'data-repo-id': 'R_kgDOID_XNw',
+    'data-category-id': 'DIC_kwDOID_XN84CUEiJ',
+    'data-mapping': 'pathname',
+    'data-theme': nowTheme,
+    'data-reactions-enabled': '1',
+    crossorigin: 'anonymous',
+    async: true
+  },null)
+
+  let ele = document.createElement('script')
+  for (let key in config) {
+    ele.setAttribute(key, config[key])
+  }
+  document.getElementById('giscus-wrap').insertAdjacentElement('afterbegin',ele)
+}
+
+function changeGiscusTheme () {
+  const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+
+  function sendMessage(message) {
+    const iframe = document.querySelector('iframe.giscus-frame');
+    if (!iframe) return;
+    iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+  }
+
+  sendMessage({
+    setConfig: {
+      theme: theme
+    }
+  });
+}
+
+if ('Giscus' === 'Giscus' || !false) {
+  if (false) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+  else loadGiscus()
+} else {
+  function loadOtherComment () {
+    loadGiscus()
+  }
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
