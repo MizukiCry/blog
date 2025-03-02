@@ -1,0 +1,386 @@
+<!DOCTYPE html><html lang="[&quot;zh-CN&quot;,&quot;en&quot;,&quot;default&quot;]" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>Kubernetes/K8S 入门学习笔记 | MizukiCry's Blog</title><meta name="author" content="MizukiCry"><meta name="copyright" content="MizukiCry"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="[Updating...] 怎么会是呢 似乎工作内容有涉及到 Kubernetes，所以先开始看一下 在网上大致了解了一下，似乎学习 Kubernetes 的最佳方式是通过实践。反正万事开头难，先简单入门一下，以后看情况具体深入学习  GeekHour - Kubernetes一小时轻"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://blog.mizuki.fun/posts/21e1d1e8.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":500},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: true,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Kubernetes/K8S 入门学习笔记',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-03-02 20:12:14'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = url => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      link.onload = () => resolve()
+      link.onerror = () => reject()
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link href="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet" /></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raw.githubusercontent.com/MizukiCry/ImageHosting/master/img/202408012118558.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">32</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">21</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fas fa-message"></i><span> Talk</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://raw.githubusercontent.com/MizukiCry/ImageHosting/master/img/file_3250492.png')"><nav id="nav"><span id="blog-info"><a href="/" title="MizukiCry's Blog"><span class="site-name">MizukiCry's Blog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fas fa-message"></i><span> Talk</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Kubernetes/K8S 入门学习笔记</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-02-24T13:15:39.000Z" title="发表于 2025-02-24 21:15:39">2025-02-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-02T12:12:14.368Z" title="更新于 2025-03-02 20:12:14">2025-03-02</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Kubernetes/K8S 入门学习笔记"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>[Updating...]</p>
+<p>怎么会是呢</p>
+<p>似乎工作内容有涉及到 Kubernetes，所以先开始看一下</p>
+<p>在网上大致了解了一下，似乎学习 Kubernetes
+的最佳方式是通过实践。反正万事开头难，先简单入门一下，以后看情况具体深入学习</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Se411r7vY">GeekHour -
+Kubernetes一小时轻松入门</a></li>
+<li><a target="_blank" rel="noopener" href="https://k8s-tutorials.pages.dev/">Kubernetes
+练习手册</a></li>
+</ul>
+<h2 id="kubernetes-是什么">1. Kubernetes 是什么</h2>
+<p>Kubernetes
+是一个开源的容器编排引擎，它可以自动化地部署、扩展和操作容器化应用程序（例如
+Docker 容器）。Kubernetes 是由 Google 设计并捐赠给 Cloud Native
+Computing Foundation（CNCF）管理的。</p>
+<h2 id="kubernetes-组件">2. Kubernetes 组件</h2>
+<p>Kubernetes 由一组核心组件构成</p>
+<ul>
+<li>node：集群中的一个节点，可以是物理机，也可以是虚拟机</li>
+<li>pod：是 Kubernetes
+的最小工作单元，是一个或多个容器的集合，创建了容易的运行环境，共享网络和存储资源</li>
+</ul>
+<p>其中一个 node 上可以有多个 pod，一个 pod
+里可以有多个容器（但通常只有一个，除非 pod 之间高度耦合）。</p>
+<p>在 node 中，每一个 pod 都有一个 IP 地址，但 IP 地址不固定，当 pod
+重启或者被重新调度时，IP 地址会发生变化。</p>
+<ul>
+<li>service (svc)：是一个抽象概念，定义了一个逻辑服务，通常指后端的一组
+pod。在 node 内部提供统一的访问入口，可以通过 service 的 IP
+和端口访问后端的 pod。</li>
+<li>Ingress：是对服务的外部访问入口，将外部请求转发到内部。可以通过
+Ingress 控制流量的访问规则，实现负载均衡、SSL 终结等功能。</li>
+<li>ConfigMap：用来存储配置信息（类似环境变量）</li>
+<li>secret：用来存储敏感信息，如密码、token 等，但只是 base64
+编码，不是加密</li>
+<li>volume (vol)：用来持久化存储数据，包括本地存储、网络存储等</li>
+</ul>
+<p>高可用性：Kubernetes 通过多副本的方式保证服务的高可用性，当某个 pod
+发生故障时，Kubernetes 会自动重启 pod，或者将 pod 调度到其他 node
+上。</p>
+<ul>
+<li>Deployment (deploy)：用来定义 pod 的副本数量和更新策略，当 pod
+发生故障时，Deployment 会自动重启 pod，或者将 pod 调度到其他 node
+上。</li>
+<li>StatefulSet (sts)：类似 Deployment，用来定义有状态的
+pod（例如数据库之间的一致性问题）</li>
+</ul>
+<h2 id="kubernetes-架构">3. Kubernetes 架构</h2>
+<p>Kubernetes 采用了 master-worker 的架构，master 负责集群的管理，worker
+负责容器的运行。</p>
+<p>在每个 worker node 上通常有三个组件：</p>
+<ul>
+<li>kubelet：管理 node 上的 pod，确保 pod 运行正常，与 master node 的
+kube-apiserver 通信</li>
+<li>kube-proxy（可选）：负责 pod 之间的代理、网络通信，实现负载均衡</li>
+<li>container runtime：容器运行时，例如 Docker 等</li>
+</ul>
+<p>接下来是 master node，通常称为控制平面（Control
+plane），包含以下组件：</p>
+<ul>
+<li>kube-apiserver：提供 API 服务，用来管理集群的资源</li>
+<li>kube-scheduler：调度器，负责 pod 的调度</li>
+<li>kube-controller-manager：运行控制器，确保集群的状态符合预期</li>
+<li>etcd：高可用 key-value 存储，用来存储集群的状态信息</li>
+<li>cloud-controller-manager（可选）：用来管理云服务提供商的资源</li>
+</ul>
+<figure>
+<img
+src="https://kubernetes.io/images/docs/components-of-kubernetes.svg"
+alt="Control plane" />
+<figcaption aria-hidden="true">Control plane</figcaption>
+</figure>
+<h2 id="环境搭建">4. 环境搭建</h2>
+<p>minikube 是一个在本地运行 Kubernetes 集群的工具，可以用来学习和开发
+Kubernetes 应用</p>
+<p>minikube 是一个单节点的 Kubernetes 集群</p>
+<p>Arch Linux 安装 minikube（使用 paru）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">paru -S minikube</span><br></pre></td></tr></table></figure>
+<p>注意可能需要先安装 docker 并启用。在 wsl 中使用 docker 时，直接在
+Windows 中安装 docker desktop 即可。</p>
+<ul>
+<li><code>minikube version</code>：查看 minikube 版本</li>
+<li><code>minikube start</code>：启动 minikube 集群</li>
+<li><code>minikube status</code>：查看 minikube 集群状态</li>
+<li><code>minikube stop</code>：停止 minikube 集群</li>
+<li><code>minikube delete</code>：删除 minikube 集群</li>
+</ul>
+<p>minikube 启动后，可以使用 <code>kubectl</code> 命令来进行交互。</p>
+<ul>
+<li><code>kubectl get nodes</code>：查看集群中的节点</li>
+</ul>
+<p>同样我们也可以使用 multipass（虚拟机管理） + k3s 来搭建一个本地的
+Kubernetes 多节点集群</p>
+<p>其它的还有一些在线网站提供的环境，如</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://labs.play-with-k8s.com/">Play with
+Kubernetes</a></li>
+<li><a target="_blank" rel="noopener" href="https://killercoda.com/">Killercoda</a></li>
+</ul>
+<h2 id="kubectl-部分常用命令">5. kubectl 部分常用命令</h2>
+<ul>
+<li><code>kubectl get nodes</code>：查看集群中的节点</li>
+<li><code>kubectl get pods</code>：查看 pod</li>
+<li><code>kubectl get svc</code>：查看 service</li>
+<li><code>kubectl get all</code>：查看所有资源</li>
+<li><code>kubectl run</code>：创建一个 pod</li>
+<li><code>kubectl create</code>：创建资源</li>
+<li><code>kubectl edit</code>：编辑资源</li>
+<li><code>kubectl logs pod-name</code>：查看 pod 的日志</li>
+<li><code>kubectl exec -it pod-name -- /bin/bash</code>：进入 pod 的
+shell</li>
+<li><code>kubectl delete</code>：删除资源</li>
+</ul>
+<p>此外，也可以利用可视化工具来管理 Kubernetes 集群，如 Portainer</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://blog.mizuki.fun">MizukiCry</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://blog.mizuki.fun/posts/21e1d1e8.html">https://blog.mizuki.fun/posts/21e1d1e8.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.mizuki.fun" target="_blank">MizukiCry's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Kubernetes/">Kubernetes</a><a class="post-meta__tags" href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">云原生</a></div><div class="post_share"><div class="social-share" data-image="https://raw.githubusercontent.com/MizukiCry/ImageHosting/master/img/file_3250492.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#kubernetes-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">1.</span> <span class="toc-text">1. Kubernetes 是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#kubernetes-%E7%BB%84%E4%BB%B6"><span class="toc-number">2.</span> <span class="toc-text">2. Kubernetes 组件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#kubernetes-%E6%9E%B6%E6%9E%84"><span class="toc-number">3.</span> <span class="toc-text">3. Kubernetes 架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">4.</span> <span class="toc-text">4. 环境搭建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#kubectl-%E9%83%A8%E5%88%86%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">5.</span> <span class="toc-text">5. kubectl 部分常用命令</span></a></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2025 By MizukiCry</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>function loadGiscus () {
+  let nowTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+
+  const config = Object.assign({
+    src: 'https://giscus.app/client.js',
+    'data-repo': 'MizukiCry/blog',
+    'data-repo-id': 'R_kgDOID_XNw',
+    'data-category-id': 'DIC_kwDOID_XN84CUEiJ',
+    'data-mapping': 'pathname',
+    'data-theme': nowTheme,
+    'data-reactions-enabled': '1',
+    crossorigin: 'anonymous',
+    async: true
+  },null)
+
+  let ele = document.createElement('script')
+  for (let key in config) {
+    ele.setAttribute(key, config[key])
+  }
+  document.getElementById('giscus-wrap').insertAdjacentElement('afterbegin',ele)
+}
+
+function changeGiscusTheme () {
+  const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+
+  function sendMessage(message) {
+    const iframe = document.querySelector('iframe.giscus-frame');
+    if (!iframe) return;
+    iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+  }
+
+  sendMessage({
+    setConfig: {
+      theme: theme
+    }
+  });
+}
+
+if ('Giscus' === 'Giscus' || !false) {
+  if (false) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+  else loadGiscus()
+} else {
+  function loadOtherComment () {
+    loadGiscus()
+  }
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
